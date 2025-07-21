@@ -37,9 +37,9 @@ This repository separates **models**, **experiments**, **data**, and **configs**
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/your‑org/awesome‑ml‑repo.git
-cd awesome‑ml‑repo
-pip install -r requirements.txt   # assumes PyTorch, Hydra, etc.
+git clone https://github.com/SAMPEL-Group/E3-Tensor-Interpolants.git
+cd E3-Tensor-Interpolants
+INSTALL PACKAGES COMMAND HERE
 
 # 2. Train (override any Hydra key on the CLI)
 python experiments/train.py \
