@@ -35,11 +35,15 @@ This repository separates **models**, **experiments**, **data**, and **configs**
 
 ## 🚀 Quick start
 
+Please inspect `setup_umn.sh` before running to ensure it is correct for your machine (paths, modules, etc).
+
 ```bash
 # 1. Clone and install
 git clone https://github.com/SAMPEL-Group/E3-Tensor-Interpolants.git
 cd E3-Tensor-Interpolants
-INSTALL PACKAGES COMMAND HERE
+chmod +x setup_umn.sh
+./setup_umn.sh
+```
 
 # 2. Train (override any Hydra key on the CLI)
 python experiments/train.py \
