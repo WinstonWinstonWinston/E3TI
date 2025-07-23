@@ -45,7 +45,14 @@ chmod +x setup_umn.sh
 ./setup_umn.sh
 ```
 
-# 2. Train (override any Hydra key on the CLI)
+# 2. Load modules 
+```
+module load gcc/8.2.0
+module load ompi/3.1.6/gnu-8.2.0
+module load cuda/11.8.0-gcc-7.2.0-xqzqlf2
+```
+
+# 3. Train (override any Hydra key on the CLI)
 python experiments/train.py \
   model=resnet18 \
   data=cifar10 \
@@ -53,12 +60,12 @@ python experiments/train.py \
   trainer.max_epochs=100 \
   optimizer.lr=1e-3
 
-# 3. Inference
+# 4. Inference
 python experiments/inference.py \
   checkpoint=outputs/2025-07-21/ckpt_best.pt \
   data=test_set
 
-# 4. Evaluation
+# 5. Evaluation
 python experiments/evaluate.py \
   checkpoint=outputs/2025-07-21/ckpt_best.pt \
   metrics=accuracy,f1
