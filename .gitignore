@@ -1,3 +1,19 @@
+# data
+data/
+*.csv
+*.tsv
+
+# Hydra output directories
+outputs/
+multirun/
+
+# Checkpoints and models
+*.pt
+*.pth
+
+# logs
+*.log
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

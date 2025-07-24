@@ -1,0 +1,10 @@
+defaults:
+  - _self_
+  - models/model
+  - experiments/train
+  - evaluation/eval
+  - evaluation/analysis
+  - paths
+  
+project:
+  name: mnist_cnn
