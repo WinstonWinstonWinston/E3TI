@@ -1,0 +1,15 @@
+# configs/base.yaml
+defaults:
+  - model: simple_cnn
+  - data: mnist
+  - experiment@exp_train: train
+  - experiment@exp_eval:  eval
+  - experiment@exp_analysis: analysis
+  - paths: default
+  - _self_
+
+project:
+  name: mnist_cnn
+
+seed: 69420
+num_device: 1

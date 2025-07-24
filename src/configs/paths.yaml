@@ -1,4 +1,0 @@
-paths:
-  data_dir: ./data/mnist
-  ckpt_dir: ./checkpoints
-  log_dir: ./logs

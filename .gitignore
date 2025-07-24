@@ -6,6 +6,7 @@ data/
 # Hydra output directories
 outputs/
 multirun/
+logs/
 
 # Checkpoints and models
 *.pt

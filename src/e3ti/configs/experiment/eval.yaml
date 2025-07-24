@@ -1,0 +1,2 @@
+metrics: ["accuracy", "confusion_matrix"]
+save_outputs: true

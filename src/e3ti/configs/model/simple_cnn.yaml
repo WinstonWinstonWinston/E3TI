@@ -1,0 +1,4 @@
+name: simple_cnn
+input_size: 28
+num_classes: 10
+hidden_channels: 32
