@@ -19,14 +19,16 @@ echo ">>> Micromamba packages..."
 micromamba install -y -c conda-forge \
   numpy matplotlib scipy omegaconf hydra-core parmed wandb tqdm mdtraj
 
-echo ">>> Pip packages (Torch + PyG stack + e3nn + lightning)..."
+echo ">>> Pip packages (Torch + PyG stack + e3nn + lightning + others)..."
 python -m pip install --upgrade pip build wheel setuptools
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-pip install torch_geometric
-pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.7.0+cu118.html
+pip install torch==2.5.0 torchvision==0.20.0 torchaudio==2.5.0 --index-url https://download.pytorch.org/whl/cu118
+pip install pyg_lib torch-scatter torch-sparse torch-cluster torch-spline-conv -f https://data.pyg.org/whl/torch-2.5.0+cu118.html
+pip install torch-geometric
 pip install --upgrade e3nn
 pip install lightning
 pip install GPUtil
+pip install pymatgen
+pip install --upgrade ase
 
 echo ">>> Build & install your project (dev mode)..."
 python -m build --wheel   # if you're in the repo you want to build
