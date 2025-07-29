@@ -27,7 +27,7 @@ checkpointer:
 optim:
   optimizer:
     name: Adam
-    lr: 3e-4
+    lr: 3e-5
     weight_decay: 0.0
     betas: [0.9, 0.999]
 
@@ -39,7 +39,7 @@ optim:
 # -------- wandb --------
 wandb:
   name: ${project.name}
-  project: e3ti
+  project: MolCrystalFlow
   save_dir: ${paths.wandb_dir}
 
 wandb_watch:

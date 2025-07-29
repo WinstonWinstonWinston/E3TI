@@ -9,20 +9,22 @@ import wandb
 # lightning
 from pytorch_lightning import LightningDataModule, LightningModule
 from pytorch_lightning.trainer import Trainer
-from pytorch_lightning.utilities.rank_zero import rank_zero_only
+from pytorch_lightning.utilities.rank_zero import rank_zero_only # type: ignore
 from pytorch_lightning.loggers.wandb import WandbLogger
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 
-# e3ti
-from e3ti.model.module import E3tiModule
-from e3ti.data.dataset import MNISTDataModule
+# mcf
+from e3ti.model.module import MCFModule
+from e3ti.data.dataset import MolCrystalDataset
+from e3ti.data.dataloader import MolCrystalDatamodule
 from e3ti.utils import flatten_dict, set_seed
+
+import torch
 
 logger = logging.getLogger(__name__)
 logging_levels = ("debug", "info", "warning", "error", "exception", "fatal", "critical")
 for level in logging_levels:
     setattr(logger, level, rank_zero_only(getattr(logger, level)))
-
 
 class Experiment:
 
@@ -33,21 +35,27 @@ class Experiment:
         self._train_cfg = cfg.exp_train
         self._model_cfg = cfg.model
 
-        # Grab dataset
-        self._datamodule: LightningDataModule = MNISTDataModule(data_cfg=self._data_cfg, data_dir=cfg.paths.data_dir)
+        # Grab datasets
+        self._train_dataset = MolCrystalDataset(data_cfg=self._data_cfg, data_fname = self._cfg.paths.data_dir+"/train_molcrystal.extxyz")
+        self._valid_dataset = MolCrystalDataset(data_cfg=self._data_cfg, data_fname = self._cfg.paths.data_dir+"/val_molcrystal.extxyz")
+        self._test_dataset =  MolCrystalDataset(data_cfg=self._data_cfg, data_fname = self._cfg.paths.data_dir+"/test_molcrystal.extxyz")
+
+        self._datamodule: LightningDataModule = MolCrystalDatamodule(loader_cfg = self._data_cfg.loader , 
+                                                                     train_dataset = self._train_dataset, 
+                                                                     valid_dataset = self._valid_dataset, 
+                                                                     test_dataset  = self._test_dataset)
 
         # Determine available gpus
         self._train_device_ids = GPUtil.getAvailable(order='memory', limit = 8)[:self._cfg.num_device]
         logger.info(f"Training with devices: {self._train_device_ids}")
 
         # Set up lightning module
-        self._module: LightningModule = E3tiModule(self._model_cfg, self._train_cfg.optim)
+        self._module: LightningModule = MCFModule(self._model_cfg, self._train_cfg.optim)
 
         # Set seed (if provided)
         if self._cfg.seed is not None:
             logger.info(f'Setting seed to {self._cfg.seed}')
             set_seed(self._cfg.seed)
-        
 
     def train(self):
         callbacks = []
@@ -82,7 +90,7 @@ class Experiment:
                 OmegaConf.save(config=self._cfg, f=f.name)
             cfg_dict = OmegaConf.to_container(self._cfg, resolve=True)
             flat_cfg = dict(flatten_dict(cfg_dict))
-            if isinstance(wbLogger.experiment.config, wandb.sdk.wandb_config.Config):
+            if isinstance(wbLogger.experiment.config, wandb.sdk.wandb_config.Config): # type: ignore
                 wbLogger.experiment.config.update(flat_cfg, allow_val_change=True)
         
         trainer = Trainer(
@@ -93,6 +101,7 @@ class Experiment:
             enable_progress_bar=True,
             enable_model_summary=True,
             devices=self._train_device_ids,
+            # detect_anomaly=True
         )
 
         trainer.fit(
@@ -103,6 +112,7 @@ class Experiment:
 
 @hydra.main(config_path="../configs", config_name="base", version_base="1.3")
 def main(cfg: DictConfig):
+    torch.autograd.set_detect_anomaly(True)
     if cfg.exp_train.warm_start is not None and cfg.expeexp_trainriment.warm_start_cfg_override:
         # Loads warm start config.
         warm_start_cfg_path = os.path.join(

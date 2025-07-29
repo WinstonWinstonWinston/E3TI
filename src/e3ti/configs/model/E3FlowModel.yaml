@@ -1,0 +1,60 @@
+name: E3FlowModel
+
+# CG Radius_graph parametes
+max_radius: 1.1 # units of reduced cell. 
+max_neighbors: 10000 # all
+periodic: False  #TODO: True here breaks it. Not sure why, using fourier edge basis now.
+
+# CG Attention Parameters
+hidden_channels: [[8,8,8],[8,8,8]]
+key_channels: [[8,8,8],[8,8,8]]
+query_channels: [[8,8,8],[8,8,8]]
+
+# CG Edge Parameters
+edge_basis: 'fourier'
+number_of_basis: 128
+edge_l_max: 3
+
+# MLP on CG edge embed params
+hidden_size: 128
+act: silu 
+
+# How many times to do CG attention
+num_layers: 5
+
+BuildingBlockEmbed:
+  # Radius_graph parameters
+  max_atoms: 17
+  max_neighbors: 100
+
+  # Attention Parameters
+  input_channels: [[128],[]]
+  output_channels: [[8,8,8],[8,8,8]]
+  key_channels: [[8,8,8],[8,8,8]]
+  query_channels: [[8,8,8],[8,8,8]]
+
+  # Edge Parameters
+  edge_basis: 'smooth_finite'
+  edge_l_max: 2
+  max_radius: 6
+  number_of_basis: 128
+  
+  # MLP on edge embed params
+  hidden_size: 128
+  act: silu
+
+  # Initial node embed params:
+  type_f_dim: 128
+
+  # How many times to do attention
+  num_layers: 3
+
+TimeEmbed: 
+  embedding_dim: 128
+  max_positions: 2056
+
+LatticeEmbed:
+
+RotationEmbed:
+  alternating_parity: True
+  l_max: 3

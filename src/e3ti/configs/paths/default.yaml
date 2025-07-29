@@ -3,4 +3,4 @@ log_dir: ${paths.root_dir}/logs/${exp_train.wandb.project}/${exp_train.wandb.nam
 wandb_dir: ${paths.root_dir}/logs
 ckpt_dir: ${paths.log_dir}/ckpt
 inference_dir: ${paths.log_dir}/inference
-data_dir: ${paths.root_dir}/data/mnist
+data_dir: ${paths.root_dir}/data/molcrystal/Thurlemann2023
