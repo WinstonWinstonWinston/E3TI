@@ -8,6 +8,10 @@ outputs/
 multirun/
 logs/
 
+# wandb outputs
+wandb/
+lightning_logs/
+
 # Checkpoints and models
 *.pt
 *.pth
