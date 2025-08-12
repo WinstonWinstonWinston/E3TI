@@ -1,0 +1,12 @@
+data: /panfs/jay/groups/21/sarupria/mural101/aced-proposal/aced-emulator/HypergraphDiff-ITO/storage/data/ala2
+root: outputs
+# n_features: 64
+# n_layers: 2
+epochs: 10
+batch_size: 128
+lr: 0.001
+# max_lag: 747000
+# fixed_lag: false
+# indistinguishable: false
+# unscaled: false
+checkpoint: null

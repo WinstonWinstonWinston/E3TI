@@ -1,0 +1,10 @@
+defaults:
+  - _self_
+  - model: ito
+  - experiments: train
+  - paths: default
+  - data: data
+  - data@dataloader: dataloader
+
+project:
+  name: E3TensorInterpolants
