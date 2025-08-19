@@ -12,7 +12,6 @@ from omegaconf import OmegaConf
 from hydra.utils import instantiate
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
-# from torch_geometric.loader import DataLoader
 from torch.utils.data import random_split
 from utils import get_timestamp, get_latest_timestamp_directory
 from data.dataloader import get_dataloaders
@@ -36,9 +35,6 @@ def main(cfg: DictConfig):
             "epochs": train_cfg.epochs,
         },
     )
-#     score_model_class = instantiate(cfg.model.score_model_kwargs)
-#     score_model_class = cpainn.PaiNNTLScore
-    ala2_path = train_cfg.data
     timestamp = get_timestamp()
 
     if train_cfg.checkpoint:
@@ -64,20 +60,13 @@ def main(cfg: DictConfig):
         json.dump(OmegaConf.to_container(train_cfg, resolve=True), f, indent=4)
 
     ## Instantiate the TLDDPM model. model.yaml (default:ito.yaml) file has configurable options for DDPMs, score model used and their params
-    model = instantiate(cfg.model, _convert_="all")  # returns partial function
+    model = instantiate(cfg.model, _convert_="all")
  
     ## Get the dataloaders. dataloader.yaml has dataloader configurable options. data.yaml has the dataset information, molecules to be used for training etc. get_dataloaders function has the dataset loading inside it.
     train_loader, val_loader = get_dataloaders(cfg)
     data_iter = iter(train_loader)
     batch = next(data_iter)
     print('Dataloader batch iter:', batch)
-#     print(batch.x[:3, :3])
-#     print(batch.y[:3,:])
-#     print('Batch.batch:\t', batch.batch)
-#     print('Batch Edge_attr:\t', batch.edge_attr)
-#     print('Batch hyperedge index:\t', batch.hyperedge_index)
-#     print('Batch size:\t', args.batch_size)
-
 
     checkpoint_callback = ModelCheckpoint(
         save_top_k=-1, dirpath=checkpoint_dir, filename="{epoch}"

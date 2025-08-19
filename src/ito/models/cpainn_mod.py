@@ -9,7 +9,8 @@ class PaiNNTLScore(torch.nn.Module):
     def __init__(
         self,
         n_features=32,
-        n_layers=2,
+        n_layers1=2,
+        n_layers2=5,
         max_lag=1000,
         diff_steps=1000,
         n_neighbors=100,
@@ -27,7 +28,7 @@ class PaiNNTLScore(torch.nn.Module):
             PaiNNBase(
                 n_features=n_features,
                 n_features_out=n_features,
-                n_layers=n_layers,
+                n_layers=n_layers1,
                 dist_encoding=dist_encoding,
             ),
         )
@@ -37,7 +38,7 @@ class PaiNNTLScore(torch.nn.Module):
             embedding.PositionalEmbedding("t_diff", n_features, diff_steps),
             embedding.CombineInvariantFeatures(2 * n_features, n_features),
 #             PaiNNBase(n_features=n_features, dist_encoding=dist_encoding),
-            PaiNNBase(n_features=n_features, n_layers=n_layers, dist_encoding=dist_encoding),
+            PaiNNBase(n_features=n_features, n_layers=n_layers2, dist_encoding=dist_encoding),
         )
 
     def forward(self, noise_batch, batch_0):
