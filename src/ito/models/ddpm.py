@@ -134,7 +134,7 @@ class DDPMBase(pl.LightningModule):
         ## Store predicted coordinates at the end of fifth epoch
 #         if self.current_epoch % 10 == 0:
         if self.current_epoch == 10:
-            output_dir = os.path.join("storage/train/vmd", "train_predictions")
+            output_dir = os.path.join("outputs/train/vmd", "train_predictions")
             print('Epoch 10 predictions stored in: ', output_dir, ' with shape:', self.batch_predy.cpu().numpy().shape)
             os.makedirs(output_dir, exist_ok=True)  # Create directory if not exists
             np.save(os.path.join(output_dir, f"ito_train_predy_epoch{self.current_epoch}.npy"), self.batch_predy.cpu().numpy())
@@ -154,7 +154,7 @@ class DDPMBase(pl.LightningModule):
             self.val_losses.clear()
 #         if self.current_epoch % 10 == 0:
         if self.current_epoch == 10:
-            output_dir = os.path.join("storage/train/vmd", "val_predictions")
+            output_dir = os.path.join("outputs/train/vmd", "val_predictions")
             print('Epoch 10 predictions stored in: ', output_dir, ' with shape:', self.batch_predy.cpu().numpy().shape)
             os.makedirs(output_dir, exist_ok=True)  # Create directory if not exists
             np.save(os.path.join(output_dir, f"ito_val_predy_epoch{self.current_epoch}.npy"), self.batch_predy.cpu().numpy())
@@ -244,8 +244,8 @@ class DDPMBase(pl.LightningModule):
 
 
 class TLDDPM(DDPMBase):
-    def sample(self, cond_batch, save_intermediate_steps, ode_steps=0):
-#     def sample(self, cond_batch, ode_steps=0):
+#     def sample(self, cond_batch, save_intermediate_steps, ode_steps=0):
+    def sample(self, cond_batch, ode_steps=0):
         cond_batch.to(self.device)
 
         batch = cond_batch.clone()

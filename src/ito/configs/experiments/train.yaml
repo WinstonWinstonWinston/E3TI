@@ -1,6 +1,6 @@
 # data: /panfs/jay/groups/21/sarupria/mural101/aced-proposal/aced-emulator/HypergraphDiff-ITO/storage/data/ala2
 root: outputs
-epochs: 10
+epochs: 50
 batch_size: 128
 lr: 0.001
 checkpoint: null

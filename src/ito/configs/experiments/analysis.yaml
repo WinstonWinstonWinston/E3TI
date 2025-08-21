@@ -1,0 +1,7 @@
+## Required args for sampling code
+root: outputs/analysis
+analysis_dir: ito_test
+trajs: //scratch.global//mural101//E3-Tensor-Interpolants//src//ito//outputs//sample//ito//sampled_trajectory.npy
+lag: 100
+no_plot_start: False
+

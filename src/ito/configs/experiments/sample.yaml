@@ -1,0 +1,16 @@
+## Required args for sampling code
+root: outputs
+lag: 100
+samples: 10
+traj_length: 1500
+checkpoint_dir: sample/ito
+traj_name: sampled_trajectory.npy
+init_from_eq: True
+checkpoint_file: //scratch.global//mural101//E3-Tensor-Interpolants//src//ito//outputs//train//20250821_105026//checkpoints//epoch=10.ckpt 
+ode_steps: 50
+
+model_loader:
+  _target_: models.ddpm.TLDDPM.load_from_checkpoint
+  # If your checkpoint path is relative, make it absolute via env root:
+  # checkpoint_path: ${oc.env:PROJECT_ROOT,.}/${sample.checkpoint_file}
+  checkpoint_path: ${sample.checkpoint_file}

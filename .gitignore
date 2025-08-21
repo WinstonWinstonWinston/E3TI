@@ -7,6 +7,7 @@ data/
 outputs/
 multirun/
 logs/
+storage/
 
 # wandb outputs
 wandb/

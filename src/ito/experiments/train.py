@@ -15,7 +15,6 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from torch.utils.data import random_split
 from utils import get_timestamp, get_latest_timestamp_directory
 from data.dataloader import get_dataloaders
-
 from hydra.utils import get_class
 import inspect
 
