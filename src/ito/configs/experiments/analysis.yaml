@@ -3,5 +3,18 @@ root: outputs/analysis
 analysis_dir: ito_test
 trajs: //scratch.global//mural101//E3-Tensor-Interpolants//src//ito//outputs//sample//ito//sampled_trajectory.npy
 lag: 100
+VAMP2: False
+Marginals: False
+Ramachandran: False
 no_plot_start: False
-
+marginal_evol: False
+# marg_evol_part: 5
+# marg_evol_samples: [100, 500, 800]
+gen_visual: False
+xtc_name: sampled_traj.xtc
+gro_name: sampled_traj.gro
+bond_dist: False
+bond_time_series: False
+angle_dist: False
+angle_time_series: True
+max_frames: 7000
