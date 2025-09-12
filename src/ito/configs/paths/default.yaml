@@ -1,6 +1,0 @@
-root_dir: .
-log_dir: ${paths.root_dir}/logs/${exp_train.wandb.project}/${exp_train.wandb.name} # Log names based off training wandb names
-wandb_dir: ${paths.root_dir}/logs
-ckpt_dir: ${paths.log_dir}/ckpt
-inference_dir: ${paths.log_dir}/inference
-data_dir: /panfs/jay/groups/21/sarupria/mural101/aced-proposal/aced-emulator/HypergraphDiff-ITO/storage/data/ala2

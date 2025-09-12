@@ -8,6 +8,19 @@ from e3nn import o3
 from typing import Sequence, Tuple, Union
 from e3nn import o3
 
+def batch2loss(batch,stratified=False):
+    a = 1
+    b = 1 
+    c = 1
+    return (a,b,c)
+
+def batch2interp(batch):
+    a = 1
+    b = 1 
+    c = 1
+    return (a,b,c)
+
+
 #### Train utils ####
 
 def flatten_dict(raw_dict):

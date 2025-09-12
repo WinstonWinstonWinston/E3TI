@@ -4,11 +4,11 @@ from e3nn import o3
 from e3nn.nn import BatchNorm
 
 from e3ti.utils import channels_arr_to_string, parse_activation, combine_features, rodrigues_vec
-from e3ti.model.SE3Transformer import SE3Transformer
-from e3ti.model.BuildingBlockEmbed import BuildingBlockEmbed
-from e3ti.model.TimeEmbed import TimeEmbed
-from e3ti.model.LatticeEmbed import LatticeEmbed
-from e3ti.model.RotationEmbed import RotationEmbed
+from e3ti.model.e3.SE3Transformer import SE3Transformer
+from e3ti.model.e3.BuildingBlockEmbed import BuildingBlockEmbed
+from e3ti.model.e3.TimeEmbed import TimeEmbed
+from e3ti.model.e3.LatticeEmbed import LatticeEmbed
+from e3ti.model.e3.RotationEmbed import RotationEmbed
 
 class FlowModel(torch.nn.Module):
 

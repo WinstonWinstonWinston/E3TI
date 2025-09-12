@@ -7,77 +7,78 @@ from omegaconf import DictConfig, OmegaConf
 import wandb
 
 # lightning
-from pytorch_lightning import LightningDataModule, LightningModule
 from pytorch_lightning.trainer import Trainer
 from pytorch_lightning.utilities.rank_zero import rank_zero_only # type: ignore
 from pytorch_lightning.loggers.wandb import WandbLogger
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 
 # mcf
-from e3ti.model.module import MCFModule
-from e3ti.data.dataset import MolCrystalDataset
-from e3ti.data.dataloader import MolCrystalDatamodule
+from e3ti.module import E3TIModule
 from e3ti.utils import flatten_dict, set_seed
-
-import torch
+from e3ti.experiment.abstract import Experiment
 
 logger = logging.getLogger(__name__)
 logging_levels = ("debug", "info", "warning", "error", "exception", "fatal", "critical")
 for level in logging_levels:
     setattr(logger, level, rank_zero_only(getattr(logger, level)))
 
-class Experiment:
+class Train(Experiment):
 
-    def __init__(self, cfg: DictConfig):
+    def __init__(self, cfg: DictConfig) -> None:
         # Split configuration up
-        self._cfg = cfg
-        self._data_cfg = cfg.data
-        self._train_cfg = cfg.exp_train
-        self._model_cfg = cfg.model
+
+        super().__init__(cfg)
+
+        self.data_cfg = cfg.data
+        self.train_cfg = cfg.exp_train
+        self.model_cfg = cfg.model
 
         # Grab datasets
-        self._train_dataset = MolCrystalDataset(data_cfg=self._data_cfg, data_fname = self._cfg.paths.data_dir+"/train_molcrystal.extxyz")
-        self._valid_dataset = MolCrystalDataset(data_cfg=self._data_cfg, data_fname = self._cfg.paths.data_dir+"/val_molcrystal.extxyz")
-        self._test_dataset =  MolCrystalDataset(data_cfg=self._data_cfg, data_fname = self._cfg.paths.data_dir+"/test_molcrystal.extxyz")
-
-        self._datamodule: LightningDataModule = MolCrystalDatamodule(loader_cfg = self._data_cfg.loader , 
-                                                                     train_dataset = self._train_dataset, 
-                                                                     valid_dataset = self._valid_dataset, 
-                                                                     test_dataset  = self._test_dataset)
+        cfg.data_cfg.split = "train"
+        self.train_dataset = hydra.utils.instantiate(self.data_cfg.dataset)
+        cfg.data_cfg.split = "test"
+        self.test_dataset = hydra.utils.instantiate(self.data_cfg.dataset)
+        cfg.data_cfg.split = "valid"
+        self.valid_dataset = hydra.utils.instantiate(self.data_cfg.dataset)
+    
+        self.datamodule =  hydra.utils.instantiate(self.data_cfg.loader,
+                                                                        train_dataset = self.train_dataset, 
+                                                                        valid_dataset = self.valid_dataset, 
+                                                                        test_dataset  = self.test_dataset)
 
         # Determine available gpus
-        self._train_device_ids = GPUtil.getAvailable(order='memory', limit = 8)[:self._cfg.num_device]
-        logger.info(f"Training with devices: {self._train_device_ids}")
+        self.train_device_ids = GPUtil.getAvailable(order='memory', limit = 8)[:self.cfg.num_device]
+        logger.info(f"Training with devices: {self.train_device_ids}")
 
         # Set up lightning module
-        self._module: LightningModule = MCFModule(self._model_cfg, self._train_cfg.optim)
+        self.module = E3TIModule(self.model_cfg)
 
         # Set seed (if provided)
-        if self._cfg.seed is not None:
-            logger.info(f'Setting seed to {self._cfg.seed}')
-            set_seed(self._cfg.seed)
+        if self.cfg.seed is not None:
+            logger.info(f'Setting seed to {self.cfg.seed}')
+            set_seed(self.cfg.seed)
 
-    def train(self):
+    def run(self):
         callbacks = []
        
         # Setup lightning wandb connection
         wbLogger = WandbLogger(
-            **self._train_cfg.wandb,
+            **self.train_cfg.wandb,
         )
         
         wbLogger.watch(
-            self._module,
-            log=self._train_cfg.wandb_watch.log,
-            log_freq=self._train_cfg.wandb_watch.log_freq
+            self.module,
+            log=self.train_cfg.wandb_watch.log,
+            log_freq=self.train_cfg.wandb_watch.log_freq
         )
 
         # Checkpoint directory.
-        ckpt_dir = self._train_cfg.checkpointer.dirpath
+        ckpt_dir = self.train_cfg.checkpointer.dirpath
         os.makedirs(ckpt_dir, exist_ok=True)
         logger.info(f"Checkpoints saved to {ckpt_dir}")
         
         # Model checkpoints
-        callbacks.append(ModelCheckpoint(**self._train_cfg.checkpointer))
+        callbacks.append(ModelCheckpoint(**self.train_cfg.checkpointer))
 
         # Learning rate monitor
         callbacks.append(LearningRateMonitor(logging_interval='step'))
@@ -87,48 +88,36 @@ class Experiment:
         if local_rank == 0:
             cfg_path = os.path.join(ckpt_dir, 'config.yaml')
             with open(cfg_path, 'w') as f:
-                OmegaConf.save(config=self._cfg, f=f.name)
-            cfg_dict = OmegaConf.to_container(self._cfg, resolve=True)
+                OmegaConf.save(config=self.cfg, f=f.name)
+            cfg_dict = OmegaConf.to_container(self.cfg, resolve=True)
             flat_cfg = dict(flatten_dict(cfg_dict))
             if isinstance(wbLogger.experiment.config, wandb.sdk.wandb_config.Config): # type: ignore
                 wbLogger.experiment.config.update(flat_cfg, allow_val_change=True)
         
         trainer = Trainer(
-            **self._train_cfg.trainer,
+            **self.train_cfg.trainer,
             callbacks=callbacks,
             logger=wbLogger,
             use_distributed_sampler=False,
             enable_progress_bar=True,
             enable_model_summary=True,
-            devices=self._train_device_ids,
+            devices=self.train_device_ids,
             # detect_anomaly=True
         )
 
         trainer.fit(
-            model=self._module,
-            datamodule=self._datamodule,
-            ckpt_path=self._train_cfg.warm_start
+            model=self.module,
+            datamodule=self.datamodule,
+            ckpt_path=self.train_cfg.warm_start
         )
 
-@hydra.main(config_path="../configs", config_name="base", version_base="1.3")
-def main(cfg: DictConfig):
-    torch.autograd.set_detect_anomaly(True)
-    if cfg.exp_train.warm_start is not None and cfg.expeexp_trainriment.warm_start_cfg_override:
-        # Loads warm start config.
-        warm_start_cfg_path = os.path.join(
-            os.path.dirname(cfg.exp_train.warm_start), 'config.yaml')
-        warm_start_cfg = OmegaConf.load(warm_start_cfg_path)
+    def summarize_cfg(self):
 
-        # Warm start config may not have latest fields in the base config.
-        # Add these fields to the warm start config.
-        OmegaConf.set_struct(cfg.model, False)
-        OmegaConf.set_struct(warm_start_cfg.model, False)
-        cfg.model = OmegaConf.merge(cfg.model, warm_start_cfg.model)
-        OmegaConf.set_struct(cfg.model, True)
-        logger.info(f'Loaded warm start config from {warm_start_cfg_path}')
+        self.train_dataset.summaraize_cfg()
+        self.test_dataset.summaraize_cfg()
+        self.valid_dataset.summaraize_cfg()
 
-    exp = Experiment(cfg)
-    exp.train()
+        self.datamodule.summarize_cfg()
+        
+        self.module.summarize_cfg()
 
-if __name__ == "__main__":
-    main()
