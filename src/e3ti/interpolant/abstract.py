@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 import torch
+from typing import Dict
+
 
 class Corrector(ABC):
     """
@@ -84,8 +86,8 @@ class Interpolant(ABC):
         :type x_1: torch.Tensor
 
         :return:
-            Interpolated value.
-        :rtype: torch.Tensor
+            Interpolated value and the latent noise.
+        :rtype:  tuple[torch.Tensor, torch.Tensor]
         """
         raise NotImplementedError
 
@@ -164,7 +166,7 @@ class Interpolant(ABC):
         self.get_corrector().summarize_cfg()
         print(f"[{self.__class__.__name__}] velocity_weight={self.velocity_weight:.6g}, denoiser_weight={self.denoiser_weight:.6g}")
     
-    def loss(self, t, x_0, x_1, z, b, eta=None) -> dict[str, torch.Tensor]:
+    def loss(self, t, x_0, x_1, z, b, eta=None) -> Dict[str, torch.Tensor]:
         """
         Loss value for a batch of data. If the eta term is None this corresponds only to the velocity loss.
         Otherwise it gives a weighted average between them based off of init params velocity_weight, and denoiser_weight.
@@ -236,7 +238,7 @@ class LinearInterpolant(Interpolant):
         z = torch.randn_like(x_0)
         x_0prime = self.get_corrector().correct(x_0)
         x_1prime = self.get_corrector().unwrap(x_0prime, x_1)
-        x_t = self.alpha(t) * x_0prime + self.beta(t) * x_1prime  + z*self.gamma(t)
+        x_t = self.alpha(t) * x_0prime + self.beta(t) * x_1prime + z*self.gamma(t)
         return self.get_corrector().correct(x_t), z
 
     def interpolate_derivative(self, t: torch.Tensor, x_0: torch.Tensor, x_1: torch.Tensor, z: torch.Tensor) -> torch.Tensor:

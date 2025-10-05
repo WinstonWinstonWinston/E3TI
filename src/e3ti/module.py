@@ -15,6 +15,8 @@ class E3TIModule(LightningModule):
         self.embedder = hydra.utils.instantiate(cfg.embedder)
         self.model = hydra.utils.instantiate(cfg.model)
         self.interpolant = hydra.utils.instantiate(cfg.interpolant)
+        self.experiment = hydra.utils.instantiate(self.cfg.experiment)
+
         self.save_hyperparameters()
 
     def forward(self, batch):
@@ -31,7 +33,7 @@ class E3TIModule(LightningModule):
         :rtype: torch_geometric.data.Data??
         """
         f = self.embedder.forward(batch)
-        f = self.model.forward(batch)
+        f = self.model.forward(f)
         return f
 
     def configure_optimizers(self):
@@ -105,6 +107,7 @@ class E3TIModule(LightningModule):
         batch['x_t'] = x_t
         batch['z'] = z
         batch = self.forward(batch)
+        # TODO: Fix interpolant to have stratified flag
         loss = self.interpolant.loss(*utils.batch2loss(batch,stratified=self.cfg.validation.stratified))
         return loss
     
@@ -121,12 +124,13 @@ class E3TIModule(LightningModule):
             A torch batch of geometric data objects which come from a data loader. 
         :type batch: torch_geometric.data.Data
         """
-        exp = hydra.utils.instantiate(self.cfg.experiment)
-        exp.run(batch)
+        self.experiment.run(batch)
 
     def summarize_cfg(self):
         """
         Produces a print statement summarizing relevant contents within the configuration object.
+
+        TODO: Add a experiment summarize call
         """
         self.prior.summarize_cfg()
         self.embedder.summarize_cfg()

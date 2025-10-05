@@ -268,7 +268,7 @@ class EncoderDecoderInterpolant(LinearInterpolant):
     def __init__(self, a: float = 1.0, switch_time: float = 0.5, power: float = 1.0, 
                  velocity_weight: float = 1.0, denoiser_weight: float = 1.0) -> None:
         """Construct encoder-decoder interpolant."""
-        super().__init__()
+        super().__init__(velocity_weight, denoiser_weight)
         if a <= 0.0:
             raise ValueError("Constant a must be positive.")
         if switch_time <= 0.0 or switch_time >= 1.0:
@@ -278,6 +278,7 @@ class EncoderDecoderInterpolant(LinearInterpolant):
         self._sqrt_a = a ** 0.5
         self._switch_time = switch_time
         self._power = power
+        
 
     def alpha(self, t: torch.Tensor) -> torch.Tensor:
         """

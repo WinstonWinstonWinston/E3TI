@@ -1,11 +1,11 @@
+from prometheus_client import s
 import torch
 from torch_cluster import radius_graph
 from torch_scatter import scatter,scatter_max
 from e3nn import o3
 import e3nn.nn as enn
 from e3nn.math import soft_unit_step, soft_one_hot_linspace
-from e3ti.utils import periodic_radius_graph
- 
+
 class SE3Transformer(torch.nn.Module):
     """ 
     SE3Transformer implemenation from https://docs.e3nn.org/en/stable/guide/transformer.html
@@ -52,17 +52,13 @@ class SE3Transformer(torch.nn.Module):
         self.eps = 1e-12
 
     def forward(self, f, pos, batch, cell_lengths=None):
-        if self.periodic:
-            edge_src, edge_dst, edge_vec = periodic_radius_graph(pos, batch, self.max_radius, cell_lengths)
-
-        else:
-            edge_src, edge_dst = radius_graph(x=pos, 
-                                          r=self.max_radius, 
-                                          batch=batch, 
-                                          loop=False,
-                                          max_num_neighbors=self.max_neighbors)
-        
-            edge_vec = pos[edge_src] - pos[edge_dst]
+        edge_src, edge_dst = radius_graph(x=pos, 
+                                        r=self.max_radius, 
+                                        batch=batch, 
+                                        loop=False,
+                                        max_num_neighbors=self.max_neighbors)
+    
+        edge_vec = pos[edge_src] - pos[edge_dst]
         
         edge_length = edge_vec.norm(dim=1)
 
@@ -94,48 +90,49 @@ class SE3Transformer(torch.nn.Module):
 
         alpha = exp / z[edge_dst]
 
-        to_chk = {
-            "f": f,
-            "pos": pos,
-            "edge_vec": edge_vec,
-            "edge_length": edge_length,
-            "edge_length_embedded": edge_length_embedded,
-            "edge_weight_cutoff": edge_weight_cutoff,
-            "edge_sh": edge_sh,
-            "q": q,
-            "k": k,
-            "v": v,
-            "exp": exp,
-            "z": z,
-            "alpha": alpha,
-        }
+        # inline code to check tensors
+        # to_chk = {
+        #     "f": f,
+        #     "pos": pos,
+        #     "edge_vec": edge_vec,
+        #     "edge_length": edge_length,
+        #     "edge_length_embedded": edge_length_embedded,
+        #     "edge_weight_cutoff": edge_weight_cutoff,
+        #     "edge_sh": edge_sh,
+        #     "q": q,
+        #     "k": k,
+        #     "v": v,
+        #     "exp": exp,
+        #     "z": z,
+        #     "alpha": alpha,
+        # }
 
-        nan_report = {
-            name: {
-                "shape": tuple(t.shape),
-                "nan_count": torch.isnan(t).sum().item(),
-            }
-            for name, t in to_chk.items()
-            if torch.isnan(t).any()
-        }
+        # nan_report = {
+        #     name: {
+        #         "shape": tuple(t.shape),
+        #         "nan_count": torch.isnan(t).sum().item(),
+        #     }
+        #     for name, t in to_chk.items()
+        #     if torch.isnan(t).any()
+        # }
 
-        dot_vals = self.dot(q[edge_dst], k)                 # logits before exp
-        overflow_mask = dot_vals > 80.0                     # 80 ≈ exp(80) ~ 5e34 (float32 max~3e38)
+        # dot_vals = self.dot(q[edge_dst], k)                 # logits before exp
+        # overflow_mask = dot_vals > 80.0                     # 80 ≈ exp(80) ~ 5e34 (float32 max~3e38)
 
-        if overflow_mask.any():                             # only print when we really overflow
-            idx = overflow_mask.nonzero(as_tuple=False)[:10]      # first few offenders
-            print(
-                ">>> exp overflow at", idx.shape[0], "edges.",
-                "Sample logits:", dot_vals[idx.flatten()].tolist()[:5]
-            )
+        # if overflow_mask.any():                             # only print when we really overflow
+        #     idx = overflow_mask.nonzero(as_tuple=False)[:10]      # first few offenders
+        #     print(
+        #         ">>> exp overflow at", idx.shape[0], "edges.",
+        #         "Sample logits:", dot_vals[idx.flatten()].tolist()[:5]
+        #     )
 
-        for name, tensor in {"exp": exp, "z": z, "z_edge": z[edge_dst]}.items():
-            if torch.isinf(tensor).any():
-                cnt = torch.isinf(tensor).sum().item()
-                print(f">>> {name} has {cnt:,} inf values (shape={tuple(tensor.shape)})")
+        # for name, tensor in {"exp": exp, "z": z, "z_edge": z[edge_dst]}.items():
+        #     if torch.isinf(tensor).any():
+        #         cnt = torch.isinf(tensor).sum().item()
+        #         print(f">>> {name} has {cnt:,} inf values (shape={tuple(tensor.shape)})")
 
 
-        if nan_report:                            # print only when something is wrong
-            print(">>> NaNs detected:", nan_report)
+        # if nan_report:                            # print only when something is wrong
+        #     print(">>> NaNs detected:", nan_report)
 
         return scatter((alpha.relu() + self.eps).sqrt() * v, edge_dst, dim=0, dim_size=len(f))

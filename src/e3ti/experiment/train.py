@@ -12,7 +12,7 @@ from pytorch_lightning.utilities.rank_zero import rank_zero_only # type: ignore
 from pytorch_lightning.loggers.wandb import WandbLogger
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 
-# mcf
+# e3ti
 from e3ti.module import E3TIModule
 from e3ti.utils import flatten_dict, set_seed
 from e3ti.experiment.abstract import Experiment
@@ -23,7 +23,9 @@ for level in logging_levels:
     setattr(logger, level, rank_zero_only(getattr(logger, level)))
 
 class Train(Experiment):
-
+    """
+    TODO: Comment me
+    """
     def __init__(self, cfg: DictConfig) -> None:
         # Split configuration up
 
@@ -111,7 +113,10 @@ class Train(Experiment):
             ckpt_path=self.train_cfg.warm_start
         )
 
-    def summarize_cfg(self):
+    def summarize_cfg(self) -> None: 
+        """
+        TODO: Add in train specific cfg summarizer
+        """
 
         self.train_dataset.summaraize_cfg()
         self.test_dataset.summaraize_cfg()
@@ -120,4 +125,6 @@ class Train(Experiment):
         self.datamodule.summarize_cfg()
         
         self.module.summarize_cfg()
+
+
 

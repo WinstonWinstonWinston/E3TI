@@ -3,12 +3,12 @@ import math
 from torch.nn import functional as F
 
 class TimeEmbed(torch.nn.Module):
-    def __init__(self, timecfg):
+    def __init__(self, timecfg) -> None:    
         super().__init__()
         self.embedding_dim = timecfg.embedding_dim
         self.max_positions = timecfg.max_positions
 
-    def forward(self, timesteps):
+    def forward(self, timesteps) -> torch.Tensor:
         """
         From Fairseq.
         Build sinusoidal embeddings.
