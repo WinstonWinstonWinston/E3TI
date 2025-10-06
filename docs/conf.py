@@ -11,8 +11,14 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 import os
 import sys
-
+from e3ti import __version__
 sys.path.insert(0, os.path.abspath("../"))
+
+# docs/conf.py (top)
+import sys, pathlib, importlib.util
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))  # repo root
+assert importlib.util.find_spec("e3ti"), "Sphinx can't import 'e3ti' from repo root"
+autodoc_mock_imports = ["torch", "torch_geometric", "e3nn", "wandb"]
 
 
 # -- Project information -----------------------------------------------------
@@ -39,6 +45,17 @@ extensions = [
     "sphinx.ext.napoleon",
     "jupyter_sphinx",
 ]
+
+extensions = [
+    "myst_parser",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",
+]
+autosummary_generate = True
+autodoc_default_options = {"members": True, "undoc-members": True, "inherited-members": True}
+autodoc_typehints = "description"
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -93,7 +110,7 @@ def linkcode_resolve(domain, info):
         import os
 
         fn = inspect.getsourcefile(obj)
-        fn = os.path.relpath(fn, start=os.path.dirname(__file__))
+        fn = os.path.relpath(fn, start=os.path.dirname(__file__)) # type: ignore
         source, lineno = inspect.getsourcelines(obj)
         return fn, lineno, lineno + len(source) - 1
 
