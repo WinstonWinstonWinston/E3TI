@@ -44,7 +44,7 @@ class Corrector(ABC):
         raise NotImplementedError
     
     def summarize_cfg(self):
-        """
+        """tr
         Prints details about the configuration defining the corrector
         """
         raise NotImplementedError
