@@ -15,7 +15,7 @@ class E3TIModule(LightningModule):
         self.embedder = hydra.utils.instantiate(cfg.embedder)
         self.model = hydra.utils.instantiate(cfg.model)
         self.interpolant = hydra.utils.instantiate(cfg.interpolant)
-        self.experiment = hydra.utils.instantiate(self.cfg.experiment)
+        # self.experiment = hydra.utils.instantiate(self.cfg.experiment)
 
         self.save_hyperparameters()
 
@@ -43,13 +43,13 @@ class E3TIModule(LightningModule):
         https://lightning.ai/docs/pytorch/stable/api/lightning.pytorch.core.LightningModule.html#lightning.pytorch.core.LightningModule.configure_optimizers
 
         """
-        ocfg = self.cfg.optcfg["optimizer"]
+        ocfg = self.cfg.optim["optimizer"]
         opt_cls = getattr(optim, ocfg["name"])
         optimizer = opt_cls(self.parameters(), **{k:v for k,v in ocfg.items() if k!="name"})
 
         # optional scheduler
         if "scheduler" in ocfg:
-            scfg = self.cfg.optcfg["scheduler"]
+            scfg = self.cfg.optim["scheduler"]
             sch_cls = getattr(optim.lr_scheduler, scfg["name"])
             scheduler = sch_cls(optimizer, **{k:v for k,v in scfg.items() if k not in ("name","monitor")})
             return {
@@ -124,7 +124,8 @@ class E3TIModule(LightningModule):
             A torch batch of geometric data objects which come from a data loader. 
         :type batch: torch_geometric.data.Data
         """
-        self.experiment.run(batch)
+        raise NotImplementedError
+        # self.experiment.run(batch)
 
     def summarize_cfg(self):
         """

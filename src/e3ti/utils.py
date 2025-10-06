@@ -5,21 +5,13 @@ import os
 from torch import nn
 from torch_geometric.nn.pool import radius_graph
 from e3nn import o3
-from typing import Sequence, Tuple, Union
-from e3nn import o3
+from torch import Tensor
 
 def batch2loss(batch,stratified=False):
-    a = 1
-    b = 1 
-    c = 1
-    return (a,b,c)
+    return batch['t_interpolant'], batch['x_base'], batch['x'], batch['z']
 
 def batch2interp(batch):
-    a = 1
-    b = 1 
-    c = 1
-    return (a,b,c)
-
+    return batch['t_interpolant'], batch['x_base'], batch['x']
 
 #### Train utils ####
 
@@ -140,16 +132,12 @@ def periodic_radius_graph(pos, batch, rcut, cell_lengths):
 
     return orig_src, orig_dst, edge_vec
 
-
-Tensor      = torch.Tensor
-IrrepsLike  = Union[str, o3.Irreps]
-
 def _permute_for_regroup(
     tensor: Tensor,
     old_irreps: o3.Irreps,
     new_irreps: o3.Irreps,
     dim: int = -1,
-) -> Tensor:
+):
     """Re-order the feature channels so `tensor` matches `new_irreps`."""
     # Build (irrep, slice) list for the old layout
     slices_old = []
@@ -172,11 +160,11 @@ def _permute_for_regroup(
 
 
 def combine_features(
-    pairs: Sequence[Tuple[Tensor, IrrepsLike]],
+    pairs,
     *,
     dim: int = -1,
     tidy: bool = False,        # <- default keeps raw order
-) -> Tuple[Tensor, o3.Irreps]:
+):
     """
     Concatenate feature blocks and return (tensor, irreps).
 
@@ -195,50 +183,4 @@ def combine_features(
         tensor_cat = _permute_for_regroup(tensor_cat, irreps_cat, irreps_new, dim) # type: ignore
         irreps_cat = irreps_new             # switch to canonical form
 
-    return tensor_cat, irreps_cat # type: ignore
-
-def rodrigues_vec(w: torch.Tensor, eps: float = 1e-8) -> torch.Tensor:
-    """
-    Exponential-coordinate version of Rodrigues' formula.
-
-    Parameters
-    ----------
-    w : (..., 3) torch.Tensor
-        Axis-angle vectors.  Direction = rotation axis, ||w|| = rotation angle.
-    eps : float, optional
-        Small positive constant to avoid division by zero when ||w|| => theta.
-
-    Returns
-    -------
-    R : (..., 3, 3) torch.Tensor
-        Rotation matrices exp([w]_x).
-    """
-    w = w.to(dtype=torch.get_default_dtype())
-
-    # θ = ‖w‖  (… , 1)
-    theta = torch.linalg.norm(w, dim=-1, keepdim=True)
-
-    # Safe normalization for the axis u = w / theta
-    u = w / (theta + eps)
-
-    ux, uy, uz = u.unbind(-1)                        # each (...,)
-
-    # Skew‑symmetric matrix K = [u]×
-    K = torch.zeros(w.shape[:-1] + (3, 3), dtype=w.dtype, device=w.device)
-    K[..., 0, 1] = -uz
-    K[..., 0, 2] =  uy
-    K[..., 1, 0] =  uz
-    K[..., 1, 2] = -ux
-    K[..., 2, 0] = -uy
-    K[..., 2, 1] =  ux
-
-    I = torch.eye(3, dtype=w.dtype, device=w.device).expand(K.shape)
-
-    # Broadcast theta to (..., 1, 1)
-    cos_t = torch.cos(theta)[..., None]
-    sin_t = torch.sin(theta)[..., None]
-
-    outer = u[..., :, None] * u[..., None, :]        # (...,3,3)
-
-    R = cos_t * I + sin_t * K + (1.0 - cos_t) * outer
-    return R
+    return tensor_cat, irreps_cat

@@ -23,23 +23,10 @@ checkpointer:
   auto_insert_metric_name: False
   mode: min
 
-# -------- optimizer and scheduler --------
-optim:
-  optimizer:
-    name: Adam
-    lr: 3e-5
-    weight_decay: 0.0
-    betas: [0.9, 0.999]
-
-  scheduler:
-    name: CosineAnnealingLR
-    T_max: experiment.train.trainer.max_epochs
-    eta_min: 1.0e-6
-
 # -------- wandb --------
 wandb:
   name: ${project.name}
-  project: MolCrystalFlow
+  project: E3TI
   save_dir: ${paths.wandb_dir}
 
 wandb_watch:

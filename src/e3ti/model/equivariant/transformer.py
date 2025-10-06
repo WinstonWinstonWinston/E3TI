@@ -1,10 +1,12 @@
-from prometheus_client import s
 import torch
 from torch_cluster import radius_graph
 from torch_scatter import scatter,scatter_max
 from e3nn import o3
 import e3nn.nn as enn
+from e3nn.o3 import Linear
+from e3nn.nn import BatchNorm
 from e3nn.math import soft_unit_step, soft_one_hot_linspace
+from e3ti.utils import channels_arr_to_string, parse_activation
 
 class SE3Transformer(torch.nn.Module):
     """ 
@@ -136,3 +138,97 @@ class SE3Transformer(torch.nn.Module):
         #     print(">>> NaNs detected:", nan_report)
 
         return scatter((alpha.relu() + self.eps).sqrt() * v, edge_dst, dim=0, dim_size=len(f))
+
+class MultiSE3Transformer(torch.nn.Module):
+
+    def __init__(self, input_channels,
+                 readout_channels,
+                 hidden_channels,
+                 key_channels,
+                 query_channels,
+                 edge_l_max,
+                 edge_basis, 
+                 max_radius,
+                 number_of_basis, 
+                 hidden_size, 
+                 max_neighbors, 
+                 act,
+                 num_layers,
+                 bn, 
+                 ) -> None:
+        super().__init__()
+    
+        self.irreps_input = o3.Irreps(channels_arr_to_string(input_channels))
+        self.irreps_readout = o3.Irreps(channels_arr_to_string(readout_channels))
+        
+        irreps_hidden = o3.Irreps(channels_arr_to_string(hidden_channels))
+
+        irreps_key = o3.Irreps(channels_arr_to_string(key_channels))
+        irreps_query = o3.Irreps(channels_arr_to_string(query_channels))
+        irreps_values = o3.Irreps(channels_arr_to_string(hidden_channels)) # hidden channels = value channels
+
+        irreps_sh = o3.Irreps.spherical_harmonics(edge_l_max)
+        edge_basis = edge_basis
+
+        max_radius = max_radius
+        number_of_basis = number_of_basis
+        hidden_size = hidden_size
+        max_neighbors = max_neighbors
+
+        act = parse_activation(act)
+
+        self.lin_in = Linear(self.irreps_input, irreps_hidden)
+
+        assert num_layers >= 1
+
+        self.eg3nn_layers = torch.nn.ModuleList()
+        # Loop over the first attention module which maps from irreps_input -> irreps_output
+        self.eg3nn_layers.append(SE3Transformer(max_radius, number_of_basis, hidden_size, act, max_neighbors,
+            irreps_sh,           # max rank to embed edges via spherical tensors
+            self.irreps_input,        # e3nn irrep corresponding to input feature
+            irreps_hidden,       # desired irrep corresponding to output feature
+            irreps_key,          # desired irrep corresponding to keys
+            irreps_values,       # desired irrep corresponding to values
+            irreps_query,        # desired irrep corresponding to query
+            edge_basis,          # basis functions to use on edge emebeddings
+            ))
+
+        # Loop over the rest of the layers which map from irreps_output -> irreps_output
+        for _ in range(num_layers-1):
+            self.eg3nn_layers.append(SE3Transformer(max_radius, number_of_basis, hidden_size, act, max_neighbors,
+                 irreps_sh,           # max rank to embed edges via spherical tensors
+                 irreps_hidden,       # e3nn irrep corresponding to input feature
+                 irreps_hidden,       # desired irrep corresponding to output feature
+                 irreps_key,          # desired irrep corresponding to keys
+                 irreps_values,       # desired irrep corresponding to values
+                 irreps_query,        # desired irrep corresponding to query
+                 edge_basis,          # basis functions to use on edge emebeddings
+                )
+            )
+       
+        self.batch_norm  = BatchNorm(irreps_hidden) if bn else lambda x:x 
+        self.readout = o3.FullyConnectedTensorProduct(irreps_hidden, irreps_hidden, self.irreps_readout, shared_weights=True, internal_weights=True)
+
+    def forward(self, batch):
+        batch_idx = batch['batch']      # for radius_graph
+        node_feats = batch['f']
+        pos = batch['x']
+
+        # convert shape with linear layer
+        node_feats = self.lin_in('f')
+
+        # --------- PAY ATTENTION!!! --------- 
+        for i in range(len(self.eg3nn_layers)):
+            # Do message passing
+            node_feat_update = self.eg3nn_layers[i](
+                f=node_feats,
+                pos=pos,
+                batch=batch_idx
+            )        
+            node_feats = node_feats + node_feat_update # Give skip connection here to help with gradient flow
+            node_feats = self.batch_norm(node_feats)
+
+        batch['v'] = self.readout(node_feats)
+
+        return batch
+    

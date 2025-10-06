@@ -7,11 +7,11 @@ class TemporallyLinearInterpolant(LinearInterpolant):
     Linear interpolant I(t, x_0, x_1) = (1 - t) * x_0 + t * x_1 between points x_0 and x_1 from two distributions p_0
     and p_1 at times t.
     """
-    def __init__(self) -> None:
+    def __init__(self, velocity_weight: float = 1.0, denoiser_weight: float = 1.0) -> None:
         """
         Construct linear interpolant.
         """
-        super().__init__()
+        super().__init__(velocity_weight, denoiser_weight)
 
     def alpha(self, t: torch.Tensor) -> torch.Tensor:
         """
@@ -120,11 +120,11 @@ class TrigonometricInterpolant(LinearInterpolant):
     from two distributions p_0 and p_1 at times t.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, velocity_weight: float = 1.0, denoiser_weight: float = 1.0) -> None:
         """
         Construct trigonometric interpolant.
         """
-        super().__init__()
+        super().__init__(velocity_weight, denoiser_weight)
 
     def alpha(self, t: torch.Tensor) -> torch.Tensor:
         """

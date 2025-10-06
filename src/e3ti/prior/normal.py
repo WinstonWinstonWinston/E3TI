@@ -14,11 +14,10 @@ class NormalPrior(E3TIPrior):
     :type cfg: Any
     """
 
-    def __init__(self, prior_cfg: Any) -> None:
+    def __init__(self, mean:float, std: float) -> None:
         super().__init__()
-        self.prior_cfg = prior_cfg
-        self.std = self.prior_cfg.std
-        self.mean = self.prior_cfg.mean
+        self.std = std
+        self.mean = mean
 
     def sample(self, batch: Data, stratified: bool) -> Data:
         """

@@ -32,17 +32,16 @@ class Train(Experiment):
         super().__init__(cfg)
 
         self.data_cfg = cfg.data
-        self.train_cfg = cfg.exp_train
-        self.model_cfg = cfg.model
+        self.train_cfg = cfg.experiment
+        self.module_cfg = cfg.module
 
         # Grab datasets
-        cfg.data_cfg.split = "train"
+        self.data_cfg.dataset.split = "train"
         self.train_dataset = hydra.utils.instantiate(self.data_cfg.dataset)
-        cfg.data_cfg.split = "test"
+        self.data_cfg.dataset.split = "test"
         self.test_dataset = hydra.utils.instantiate(self.data_cfg.dataset)
-        cfg.data_cfg.split = "valid"
+        self.data_cfg.dataset.split = "valid"
         self.valid_dataset = hydra.utils.instantiate(self.data_cfg.dataset)
-    
         self.datamodule =  hydra.utils.instantiate(self.data_cfg.loader,
                                                                         train_dataset = self.train_dataset, 
                                                                         valid_dataset = self.valid_dataset, 
@@ -53,7 +52,7 @@ class Train(Experiment):
         logger.info(f"Training with devices: {self.train_device_ids}")
 
         # Set up lightning module
-        self.module = E3TIModule(self.model_cfg)
+        self.module = E3TIModule(self.module_cfg)
 
         # Set seed (if provided)
         if self.cfg.seed is not None:

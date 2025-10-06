@@ -1,0 +1,3 @@
+_target_: e3ti.prior.normal.NormalPrior
+mean: 0.0
+std: 1.0
