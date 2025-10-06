@@ -1,20 +1,33 @@
-.. e3ti documentation master file, created by
-   sphinx-quickstart on Mon Oct  6 17:20:15 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Welcome to e3ti
+===============
 
-Welcome to e3ti's docs
-======================
+.. figure:: _static/E3TIDesign.png
+   :alt: e3ti overview
+   :align: center
+   :width: 80%
+   :target: https://github.com/winstonwinstonwinston/E3TI
+
+   *e3ti overview.*
+
+What is e3ti?
+-------------
+Equivariant flows and interpolants for geometric ML. Clean API, typed, with docs generated automatically.
 
 .. toctree::
+   :caption: Guides
    :maxdepth: 2
-   :hidden:
 
-API Reference
-=============
+   guides/getting_started
+   guides/examples
 
-.. autosummary::
-   :toctree: _autosummary
-   :recursive:
+.. toctree::
+   :caption: Interpolants
+   :maxdepth: 2
 
-   e3ti
+   interpolants
+
+.. toctree::
+   :caption: API
+   :maxdepth: 2
+
+   autoapi/index
