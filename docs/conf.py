@@ -78,3 +78,35 @@ html_theme = "sphinx_rtd_theme"
 # html_static_path = ['_static']
 
 myst_update_mathjax = False
+
+
+# Resolve function for the linkcode extension.
+# Thanks to https://github.com/Lasagne/Lasagne/blob/master/docs/conf.py
+def linkcode_resolve(domain, info):
+    def find_source():
+        # try to find the file and line number, based on code from numpy:
+        # https://github.com/numpy/numpy/blob/master/doc/source/conf.py#L286
+        obj = sys.modules[info["module"]]
+        for part in info["fullname"].split("."):
+            obj = getattr(obj, part)
+        import inspect
+        import os
+
+        fn = inspect.getsourcefile(obj)
+        fn = os.path.relpath(fn, start=os.path.dirname(__file__))
+        source, lineno = inspect.getsourcelines(obj)
+        return fn, lineno, lineno + len(source) - 1
+
+    if domain != "py" or not info["module"]:
+        return None
+
+    try:
+        rel_path, line_start, line_end = find_source()
+        # __file__ is imported from e3nn
+        filename = f"e3nn/{rel_path}#L{line_start}-L{line_end}"
+    except Exception:
+        # no need to be relative to core here as module includes full path.
+        filename = info["module"].replace(".", "/") + ".py"
+
+    tag = __version__
+    return f"https://github.com/e3nn/e3nn/blob/{tag}/{filename}"
