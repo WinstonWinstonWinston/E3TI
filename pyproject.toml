@@ -1,20 +1,23 @@
 [build-system]
-requires = ["setuptools>=61", "wheel"]
+requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "e3ti"
 version = "0.1.0"
-requires-python = ">=3.7"
-dependencies = [
-  "numpy",
-  "omegaconf",
-  "hydra-core"
-]
+description = "E3 Tensor Interpolants"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
 
 [tool.setuptools]
-package-dir = {"" = "src"}
+# We’re using the “flat” layout (no src/). Find the e3ti package + subpackages.
+packages = { find = { include = ["e3ti*"] } }
 
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["e3ti*"]
+# Include non-.py files shipped under e3ti/data/** in the wheel
+[tool.setuptools.package-data]
+e3ti = [
+  "data/**/*",
+]
+
+# (Optional) if you also want non-data files like md, pdb, etc., this wildcard already covers them.
