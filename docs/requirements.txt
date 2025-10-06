@@ -1,0 +1,7 @@
+sphinx==8.2.3
+myst-parser
+autodocsumm>=0.2.13
+jupyter-sphinx
+ipykernel
+nbconvert
+jupyter-client
