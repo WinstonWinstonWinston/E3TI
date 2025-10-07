@@ -20,15 +20,16 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.intersphinx",
     "sphinx.ext.linkcode",
-    "autoapi.extension",           # << AutoAPI
+    "autoapi.extension",           # AutoAPI
 ]
 
-# AutoAPI config (scans code every build; no stub tiles)
+# AutoAPI config (scans code every build)
 import pathlib as _p
 autoapi_type = "python"
 autoapi_dirs = [str(_p.Path(__file__).resolve().parents[1] / "e3ti")]
-autoapi_add_toctree_entry = False        # we place it in the sidebar ourselves
-autoapi_python_class_content = "both"    # class doc + __init__ doc
+autoapi_root = "api"                      # <<< CHANGED: emit into docs/api/*
+autoapi_add_toctree_entry = True          # <<< CHANGED: create api/index and add toctree
+autoapi_python_class_content = "both"
 autoapi_options = [
     "members",
     "undoc-members",
@@ -57,7 +58,6 @@ intersphinx_mapping = {
     "torch_geometric": ("https://pytorch-geometric.readthedocs.io/en/latest/", None),
     "ase": ("https://wiki.fysik.dtu.dk/ase/", None),
 }
-
 
 # -- HTML --------------------------------------------------------------------
 html_theme = "sphinx_rtd_theme"

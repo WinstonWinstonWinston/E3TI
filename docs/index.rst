@@ -24,4 +24,6 @@ Equivariant stochastic interpolants for geometric rare event sampling. Clean API
    :caption: API
    :maxdepth: 2
 
-   autoapi/index
+   api/e3ti
+
+
