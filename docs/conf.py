@@ -51,12 +51,13 @@ napoleon_use_rtype = False
 
 # -- Intersphinx -------------------------------------------------------------
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3", {}),
-    "torch": ("https://pytorch.org/docs/stable", {}),
-    "numpy": ("https://numpy.org/doc/stable", {}),
-    "torch_geometric": ("https://pytorch-geometric.readthedocs.io/en/latest", {}),
-    "ase": ("https://wiki.fysik.dtu.dk/ase", {}),
+    "python": ("https://docs.python.org/3", None),
+    "torch": ("https://pytorch.org/docs/stable/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "torch_geometric": ("https://pytorch-geometric.readthedocs.io/en/latest/", None),
+    "ase": ("https://wiki.fysik.dtu.dk/ase/", None),
 }
+
 
 # -- HTML --------------------------------------------------------------------
 html_theme = "sphinx_rtd_theme"
