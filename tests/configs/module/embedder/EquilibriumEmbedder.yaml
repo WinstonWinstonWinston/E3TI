@@ -15,5 +15,5 @@ force_field:
     track_running_stats: True
 
 atom_type: 
-    num_types: 10
+    num_types: 14
     embedding_dim: 32

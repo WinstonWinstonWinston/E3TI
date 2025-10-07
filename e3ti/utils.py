@@ -8,10 +8,10 @@ from e3nn import o3
 from torch import Tensor
 
 def batch2loss(batch,stratified=False):
-    return batch['t_interpolant'], batch['x_base'], batch['x'], batch['z']
+    return batch['t_interpolant'][batch.batch][:,None], batch['x_base'], batch['x'], batch['z'],batch['b'],batch['eta']
 
 def batch2interp(batch):
-    return batch['t_interpolant'], batch['x_base'], batch['x']
+    return batch['t_interpolant'][batch.batch][:,None], batch['x_base'], batch['x']
 
 #### Train utils ####
 

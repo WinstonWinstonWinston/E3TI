@@ -31,14 +31,11 @@ class EquilibriumEmbedder(nn.Module):
     def forward(self, batch : Data) -> Data:
         # Expect: atom_type (B,N), interp_time (B,), and if use_ff: charge/mass/sigma/epsilon (B,N)
         atom_ty  = batch["atom_type"].long()
-        t        = batch["interp_time"].float()
+        t        = batch["t_interpolant"].float()
+        
+        atom_emb = self.atom_type_embed(atom_ty)               # (B*N, D_atom)
 
-        B, N = atom_ty.shape
-
-        atom_emb = self.atom_type_embed(atom_ty)               # (B, N, D_atom)
-
-        t_emb = self.interpolant_time_embedder(t)              # (B, D_t)
-        t_emb = t_emb[:, None, :].expand(B, N, -1)             # (B, N, D_t)
+        t_emb = self.interpolant_time_embedder(t)[batch.batch] # (B*N, D_t)
 
         ff_emb = None
         parts = [atom_emb, t_emb]
@@ -48,8 +45,8 @@ class EquilibriumEmbedder(nn.Module):
             mass    = batch["mass"].float()
             sigma   = batch["sigma"].float()
             epsilon = batch["epsilon"].float()
-            ff_in = torch.stack([charge, mass, sigma, epsilon], dim=-1)  # (B, N, 4)
-            ff_emb = self.ff_embedder(ff_in)                             # (B, N, D_ff)
+            ff_in = torch.stack([charge, mass, sigma, epsilon], dim=-1)  # (B*N, 4)
+            ff_emb = self.ff_embedder(ff_in)                             # (B*N, D_ff)
             parts.append(ff_emb)
 
         f = torch.cat(parts, dim=-1)  # (B, N, D_atom + D_t [+ D_ff])

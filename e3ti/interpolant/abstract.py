@@ -53,7 +53,7 @@ class Interpolant(ABC):
     r"""
     Abstract class for defining an interpolant
 
-    ..math::
+    .. math::
 
         x_t = I(t, x_0, x_1) + \gamma(t)z
     
@@ -173,7 +173,7 @@ class Interpolant(ABC):
         Loss value for a batch of data. If the eta term is None this corresponds only to the velocity loss.
         Otherwise it gives a weighted average between them based off of init params velocity_weight, and denoiser_weight.
 
-        ..math::
+        .. math::
 
             \mathcal{L}_{\text{velocity}}(\theta) = \mathbb{E}\!\left[\|b\|^{2} - 2\, b \cdot \dot I\right]
 
@@ -206,8 +206,8 @@ class Interpolant(ABC):
         :rtype: dict[str, torch.Tensor]
         """
         interpolant_dot = self.interpolate_derivative(t,x_0,x_1,z)
-        loss_velocity  = torch.mean(torch.einsum('BND,BND->B', b, b    ) - 2*torch.einsum('BND, BND', b, interpolant_dot))
-        loss_denoiser  = torch.mean(torch.einsum('BND,BND->B', eta, eta) - 2*torch.einsum('BND, BND', eta, z) if eta is not None else torch.zeros_like(loss_velocity))
+        loss_velocity  = torch.mean(torch.einsum('BD,BD->B', b, b    ) - 2*torch.einsum('BD, BD', b, interpolant_dot))
+        loss_denoiser  = torch.mean(torch.einsum('BD,BD->B', eta, eta) - 2*torch.einsum('BD, BD', eta, z) if eta is not None else torch.zeros_like(loss_velocity))
         loss = self.velocity_weight*loss_velocity + self.denoiser_weight*loss_denoiser
         return {"loss": loss,
                 "loss_velocity": loss_velocity,
@@ -217,7 +217,7 @@ class LinearInterpolant(Interpolant):
     r"""
     Abstract class for defining a spatially linear interpolant
 
-    ..math::
+    .. math::
 
         I(t, x_0, x_1) = \alpha(t)\cdot x_0 + \beta(t) \cdot x_1
      
@@ -229,7 +229,7 @@ class LinearInterpolant(Interpolant):
         r"""
         Interpolate between points x_0 and x_1 from two distributions p_0 and p_1 at times t.
 
-        ..math::
+        .. math::
             
             x_t = \alpha(t)\cdot x_0 + \beta(t) \cdot x_1 + \gamma(y)\cdot z
 
@@ -250,11 +250,6 @@ class LinearInterpolant(Interpolant):
         z = torch.randn_like(x_0)
         x_0prime = self.get_corrector().correct(x_0)
         x_1prime = self.get_corrector().unwrap(x_0prime, x_1)
-
-        print(x_0prime.size())
-        print(x_1prime.size())
-        print(t.size())
-
         x_t = self.alpha(t) * x_0prime + self.beta(t) * x_1prime + z*self.gamma(t)
         return self.get_corrector().correct(x_t), z
 
@@ -263,7 +258,7 @@ class LinearInterpolant(Interpolant):
          Compute the derivative of the interpolant :math:`\dot{x}_t` with respect to time between points :math:`x_0` and :math:`x_1` 
         from two distributions :math:`p_0` and :math:`p_1` at times :math:`t`.
 
-        ..math::
+        .. math::
         
             \dot{x_t} = \dot{\alpha(t)}\cdot x_0 + \dot{\beta(t)}\cdot x_1 + \dot{\gamma(y)}\cdot z
 

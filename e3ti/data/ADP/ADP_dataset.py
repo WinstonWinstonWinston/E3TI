@@ -48,7 +48,7 @@ class ADPDataset(E3TIDataset):
         name     = [a.name for a in parm.atoms]
 
         uniq = list(dict.fromkeys(name))
-        name2int = {n: i+1 for i, n in enumerate(uniq)}
+        name2int = {n: i for i, n in enumerate(uniq)}
         atom_type = torch.tensor([name2int[n] for n in name], dtype=torch.long)  # encoded sequence
         
         node_f = dict()

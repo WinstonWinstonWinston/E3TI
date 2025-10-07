@@ -19,7 +19,7 @@ class NormalPrior(E3TIPrior):
         self.std = std
         self.mean = mean
 
-    def sample(self, batch: Data, stratified: bool) -> Data:
+    def sample(self, batch: Data, stratified: bool = False) -> Data:
         """
         Draw samples from the prior and return the same batch object type with updated keys.
 
@@ -35,7 +35,7 @@ class NormalPrior(E3TIPrior):
         :rtype: torch_geometric.data.Data
         """
         x_base = torch.randn_like(batch['x'])*self.std + self.mean
-        B = max(batch['batch'])
+        B = max(batch['batch']) + 1 # shift by 1, zero indexing
         device = batch['x'].device
         t_interpolant = torch.rand(B, device=device) if not stratified else torch.cat([(i + torch.rand(B//4 + (i < B%4), device=device))/4 for i in range(4)])
 
@@ -55,8 +55,10 @@ class NormalPrior(E3TIPrior):
             Per-example log p(x) with a leading batch dimension.
         :rtype: torch.Tensor
         """
-        x = batch["x_base"]
+        x = batch["x_base"] # (B*N, 3)
+        B = batch.num_graphs
         z = (x - self.mean) / self.std
+        z = z.view(B, -1, 3) # requires contiguous nodes per graph
         B, N, D = z.shape
         return -0.5*torch.sum(z*z, dim=(1,2)) - 0.5*N*D*math.log(2*math.pi) - N*D*math.log(float(self.std))
 

@@ -185,7 +185,7 @@ class MultiSE3Transformer(torch.nn.Module):
         # Loop over the first attention module which maps from irreps_input -> irreps_output
         self.eg3nn_layers.append(SE3Transformer(max_radius, number_of_basis, hidden_size, act, max_neighbors,
             irreps_sh,           # max rank to embed edges via spherical tensors
-            self.irreps_input,        # e3nn irrep corresponding to input feature
+            irreps_hidden,       # e3nn irrep corresponding to input feature
             irreps_hidden,       # desired irrep corresponding to output feature
             irreps_key,          # desired irrep corresponding to keys
             irreps_values,       # desired irrep corresponding to values
@@ -207,7 +207,8 @@ class MultiSE3Transformer(torch.nn.Module):
             )
        
         self.batch_norm  = BatchNorm(irreps_hidden) if bn else lambda x:x 
-        self.readout = o3.FullyConnectedTensorProduct(irreps_hidden, irreps_hidden, self.irreps_readout, shared_weights=True, internal_weights=True)
+        self.readout_b = Linear(irreps_hidden, self.irreps_readout)
+        self.readout_eta = Linear(irreps_hidden, self.irreps_readout)
 
     def forward(self, batch):
         batch_idx = batch['batch']      # for radius_graph
@@ -215,7 +216,7 @@ class MultiSE3Transformer(torch.nn.Module):
         pos = batch['x']
 
         # convert shape with linear layer
-        node_feats = self.lin_in('f')
+        node_feats = self.lin_in(batch['f'])
 
         # --------- PAY ATTENTION!!! --------- 
         for i in range(len(self.eg3nn_layers)):
@@ -228,7 +229,8 @@ class MultiSE3Transformer(torch.nn.Module):
             node_feats = node_feats + node_feat_update # Give skip connection here to help with gradient flow
             node_feats = self.batch_norm(node_feats)
 
-        batch['v'] = self.readout(node_feats)
+        batch['b'] = self.readout_b(node_feats)
+        batch['eta'] = self.readout_eta(node_feats)
 
         return batch
     
