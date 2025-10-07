@@ -17,16 +17,11 @@ from e3ti.module import E3TIModule
 from e3ti.utils import flatten_dict, set_seed
 from e3ti.experiment.abstract import Experiment
 
-logger = logging.getLogger(__name__)
-logging_levels = ("debug", "info", "warning", "error", "exception", "fatal", "critical")
-for level in logging_levels:
-    setattr(logger, level, rank_zero_only(getattr(logger, level)))
-
 class Train(Experiment):
     """
     TODO: Comment me
     """
-    def __init__(self, cfg: DictConfig) -> None:
+    def __init__(self, cfg: DictConfig, logger) -> None:
         # Split configuration up
 
         super().__init__(cfg)
@@ -59,6 +54,8 @@ class Train(Experiment):
             logger.info(f'Setting seed to {self.cfg.seed}')
             set_seed(self.cfg.seed)
 
+        self.logger = logger
+
     def run(self):
         callbacks = []
        
@@ -76,7 +73,7 @@ class Train(Experiment):
         # Checkpoint directory.
         ckpt_dir = self.train_cfg.checkpointer.dirpath
         os.makedirs(ckpt_dir, exist_ok=True)
-        logger.info(f"Checkpoints saved to {ckpt_dir}")
+        self.logger.info(f"Checkpoints saved to {ckpt_dir}")
         
         # Model checkpoints
         callbacks.append(ModelCheckpoint(**self.train_cfg.checkpointer))

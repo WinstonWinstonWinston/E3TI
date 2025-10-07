@@ -1,3 +1,10 @@
+
+logger = logging.getLogger(__name__)
+logging_levels = ("debug", "info", "warning", "error", "exception", "fatal", "critical")
+for level in logging_levels:
+    setattr(logger, level, rank_zero_only(getattr(logger, level)))
+
+
 @hydra.main(config_path="../configs", config_name="base", version_base="1.3")
 def main(cfg: DictConfig):
     torch.autograd.set_detect_anomaly(True)
