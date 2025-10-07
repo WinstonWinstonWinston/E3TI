@@ -1,0 +1,1104 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>e3ti.interpolant.interpolants &mdash; e3ti 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            e3ti
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">e3ti</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">e3ti.interpolant.interpolants</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/e3ti/interpolant/interpolants/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-e3ti.interpolant.interpolants">
+<span id="e3ti-interpolant-interpolants"></span><h1>e3ti.interpolant.interpolants<a class="headerlink" href="#module-e3ti.interpolant.interpolants" title="Link to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">e3ti.interpolant.interpolants.</span></span><span class="sig-name descname"><span class="pre">TemporallyLinearInterpolant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">velocity_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">denoiser_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L5-L115"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../abstract/index.html#e3ti.interpolant.abstract.LinearInterpolant" title="e3ti.interpolant.abstract.LinearInterpolant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">e3ti.interpolant.abstract.LinearInterpolant</span></code></a></p>
+<p>Linear interpolant I(t, x_0, x_1) = (1 - t) * x_0 + t * x_1 between points x_0 and x_1 from two distributions p_0
+and p_1 at times t.</p>
+<p>Construct linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>velocity_weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>denoiser_weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L16-L28"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.alpha" title="Link to this definition"></a></dt>
+<dd><p>Alpha function alpha(t) in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Values of the alpha function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.alpha_dot">
+<span class="sig-name descname"><span class="pre">alpha_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L30-L42"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.alpha_dot" title="Link to this definition"></a></dt>
+<dd><p>Time derivative of the alpha function in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivatives of the alpha function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.beta">
+<span class="sig-name descname"><span class="pre">beta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L44-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.beta" title="Link to this definition"></a></dt>
+<dd><p>Beta function beta(t) in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Values of the beta function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.beta_dot">
+<span class="sig-name descname"><span class="pre">beta_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L58-L70"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.beta_dot" title="Link to this definition"></a></dt>
+<dd><p>Time derivative of the beta function in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivatives of the beta function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.get_corrector">
+<span class="sig-name descname"><span class="pre">get_corrector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L72-L80"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.get_corrector" title="Link to this definition"></a></dt>
+<dd><p>Get the corrector implied by the interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Identity corrector that does nothing.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../abstract/index.html#e3ti.interpolant.abstract.Corrector" title="e3ti.interpolant.abstract.Corrector">Corrector</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.gamma">
+<span class="sig-name descname"><span class="pre">gamma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L82-L94"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.gamma" title="Link to this definition"></a></dt>
+<dd><p>Gamma function gamma(t) in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Values of the gamma function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.gamma_dot">
+<span class="sig-name descname"><span class="pre">gamma_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L96-L108"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.gamma_dot" title="Link to this definition"></a></dt>
+<dd><p>Time derivative of the gamma function in the stochastic interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivatives of the gamma function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.summarize_cfg">
+<span class="sig-name descname"><span class="pre">summarize_cfg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L110-L115"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.summarize_cfg" title="Link to this definition"></a></dt>
+<dd><p>Prints details about the configuration defining the interpolant</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.interpolate">
+<span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L210-L231"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.interpolate" title="Link to this definition"></a></dt>
+<dd><p>Interpolate between points <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span> from two distributions <span class="math notranslate nohighlight">\(p_0\)</span> and <span class="math notranslate nohighlight">\(p_1\)</span> at times t.</p>
+<p>In order to possibly allow for periodic boundary conditions, x_1 is first unwrapped based on the corrector of
+this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
+this unwrapping returns the closest image of <span class="math notranslate nohighlight">\(x_1\)</span> to <span class="math notranslate nohighlight">\(x_0\)</span>. The interpolant is then computed based on the unwrapped
+<span class="math notranslate nohighlight">\(x_1\)</span> and the alpha and beta functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p></li>
+<li><p><strong>x_0</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from p_0.</p></li>
+<li><p><strong>x_1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from p_1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>tuple[torch.Tensor, torch.Tensor]</em> – Interpolated value and the latent noise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a>[<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a>, <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.interpolate_derivative">
+<span class="sig-name descname"><span class="pre">interpolate_derivative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L233-L256"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.interpolate_derivative" title="Link to this definition"></a></dt>
+<dd><p>Compute the derivative of the interpolant between points <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span> from two distributions <span class="math notranslate nohighlight">\(p_0\)</span> and <span class="math notranslate nohighlight">\(p_1\)</span> at times
+<span class="math notranslate nohighlight">\(t\)</span> with respect to time.</p>
+<p>In order to possibly allow for periodic boundary conditions, <span class="math notranslate nohighlight">\(x_1\)</span> is first unwrapped based on the corrector of
+this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
+this unwrapping returns the closest image of <span class="math notranslate nohighlight">\(x_1\)</span> to <span class="math notranslate nohighlight">\(x_0\)</span>. The interpolant derivative is then computed based on
+the unwrapped <span class="math notranslate nohighlight">\(x_1\)</span> and the alpha and beta functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in <span class="math notranslate nohighlight">\([0,1]\)</span>.</p></li>
+<li><p><strong>x_0</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from <span class="math notranslate nohighlight">\(p_0\)</span>.</p></li>
+<li><p><strong>x_1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from: math:<code class="xref any docutils literal notranslate"><span class="pre">p_1</span></code>.</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>torch.Tensor</em> – Derivative of the interpolant.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.13)"><strong>NotImplementedError</strong></a> – Must be implemented by subclasses.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.velocity_weight">
+<span class="sig-name descname"><span class="pre">velocity_weight</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.velocity_weight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.denoiser_weight">
+<span class="sig-name descname"><span class="pre">denoiser_weight</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.denoiser_weight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L174-L201"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.loss" title="Link to this definition"></a></dt>
+<dd><p>Loss value for a batch of data. If the eta term is None this corresponds only to the velocity loss.
+Otherwise it gives a weighted average between them based off of init params velocity_weight, and denoiser_weight.</p>
+<div class="math notranslate nohighlight">
+\[\]</div>
+<p>L_{text{velocity}}(theta) = mathbb{E}!left[,lVert brVert^2 - 2, b cdot dot I,right] \
+L_{text{denoiser}}(theta) = mathbb{E}!left[,lVert etarVert^2 - 2, eta cdot z,right] \
+L(theta) = text{velocity_weight},L_{text{velocity}}(theta) + text{denoiser_weight},L_{text{denoiser}}(theta)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p></li>
+<li><p><strong>x_0</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Samples from the base distribution rho_0.</p></li>
+<li><p><strong>x_1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Samples from the data distribution rho_0.</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Latent noise values <span class="math notranslate nohighlight">\(z \sim \mathcal{N}(0, 1)\)</span>.</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Predicted velocity values for <span class="math notranslate nohighlight">\(x_t\)</span>.</p></li>
+<li><p><strong>eta</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Predicted denoiser values for <span class="math notranslate nohighlight">\(x_t\)</span>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>dict[str, torch.Tensor]</em> – A dictionary of loss values, <code class="docutils literal notranslate"><span class="pre">loss</span></code>, <code class="docutils literal notranslate"><span class="pre">loss_velocity</span></code>, and <code class="docutils literal notranslate"><span class="pre">loss_denoiser</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TemporallyLinearInterpolant.__slots__">
+<span class="sig-name descname"><span class="pre">__slots__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#e3ti.interpolant.interpolants.TemporallyLinearInterpolant.__slots__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">e3ti.interpolant.interpolants.</span></span><span class="sig-name descname"><span class="pre">TrigonometricInterpolant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">velocity_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">denoiser_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L117-L228"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../abstract/index.html#e3ti.interpolant.abstract.LinearInterpolant" title="e3ti.interpolant.abstract.LinearInterpolant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">e3ti.interpolant.abstract.LinearInterpolant</span></code></a></p>
+<p>Trigonometric interpolant I(t, x_0, x_1) = cos(pi / 2 * t) * x_0 + sin(pi / 2 * t) * x_1 between points x_0 and x_1
+from two distributions p_0 and p_1 at times t.</p>
+<p>Construct trigonometric interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>velocity_weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>denoiser_weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L129-L141"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.alpha" title="Link to this definition"></a></dt>
+<dd><p>Alpha function alpha(t) in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Values of the alpha function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.alpha_dot">
+<span class="sig-name descname"><span class="pre">alpha_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L143-L155"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.alpha_dot" title="Link to this definition"></a></dt>
+<dd><p>Time derivative of the alpha function in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivatives of the alpha function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.beta">
+<span class="sig-name descname"><span class="pre">beta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L157-L169"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.beta" title="Link to this definition"></a></dt>
+<dd><p>Beta function beta(t) in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Values of the beta function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.beta_dot">
+<span class="sig-name descname"><span class="pre">beta_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L171-L183"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.beta_dot" title="Link to this definition"></a></dt>
+<dd><p>Time derivative of the beta function in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivatives of the beta function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.get_corrector">
+<span class="sig-name descname"><span class="pre">get_corrector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L185-L193"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.get_corrector" title="Link to this definition"></a></dt>
+<dd><p>Get the corrector implied by the interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Identity corrector that does nothing.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../abstract/index.html#e3ti.interpolant.abstract.Corrector" title="e3ti.interpolant.abstract.Corrector">Corrector</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.gamma">
+<span class="sig-name descname"><span class="pre">gamma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L195-L207"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.gamma" title="Link to this definition"></a></dt>
+<dd><p>Gamma function in the stochastic interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Values of the gamma function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.gamma_dot">
+<span class="sig-name descname"><span class="pre">gamma_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L209-L221"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.gamma_dot" title="Link to this definition"></a></dt>
+<dd><p>Time derivative of the gamma function in the stochastic interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivatives of the gamma function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.summarize_cfg">
+<span class="sig-name descname"><span class="pre">summarize_cfg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L223-L228"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.summarize_cfg" title="Link to this definition"></a></dt>
+<dd><p>Prints details about the configuration defining the interpolant</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.interpolate">
+<span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L210-L231"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.interpolate" title="Link to this definition"></a></dt>
+<dd><p>Interpolate between points <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span> from two distributions <span class="math notranslate nohighlight">\(p_0\)</span> and <span class="math notranslate nohighlight">\(p_1\)</span> at times t.</p>
+<p>In order to possibly allow for periodic boundary conditions, x_1 is first unwrapped based on the corrector of
+this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
+this unwrapping returns the closest image of <span class="math notranslate nohighlight">\(x_1\)</span> to <span class="math notranslate nohighlight">\(x_0\)</span>. The interpolant is then computed based on the unwrapped
+<span class="math notranslate nohighlight">\(x_1\)</span> and the alpha and beta functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p></li>
+<li><p><strong>x_0</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from p_0.</p></li>
+<li><p><strong>x_1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from p_1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>tuple[torch.Tensor, torch.Tensor]</em> – Interpolated value and the latent noise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a>[<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a>, <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.interpolate_derivative">
+<span class="sig-name descname"><span class="pre">interpolate_derivative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L233-L256"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.interpolate_derivative" title="Link to this definition"></a></dt>
+<dd><p>Compute the derivative of the interpolant between points <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span> from two distributions <span class="math notranslate nohighlight">\(p_0\)</span> and <span class="math notranslate nohighlight">\(p_1\)</span> at times
+<span class="math notranslate nohighlight">\(t\)</span> with respect to time.</p>
+<p>In order to possibly allow for periodic boundary conditions, <span class="math notranslate nohighlight">\(x_1\)</span> is first unwrapped based on the corrector of
+this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
+this unwrapping returns the closest image of <span class="math notranslate nohighlight">\(x_1\)</span> to <span class="math notranslate nohighlight">\(x_0\)</span>. The interpolant derivative is then computed based on
+the unwrapped <span class="math notranslate nohighlight">\(x_1\)</span> and the alpha and beta functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in <span class="math notranslate nohighlight">\([0,1]\)</span>.</p></li>
+<li><p><strong>x_0</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from <span class="math notranslate nohighlight">\(p_0\)</span>.</p></li>
+<li><p><strong>x_1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from: math:<code class="xref any docutils literal notranslate"><span class="pre">p_1</span></code>.</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>torch.Tensor</em> – Derivative of the interpolant.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.13)"><strong>NotImplementedError</strong></a> – Must be implemented by subclasses.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.velocity_weight">
+<span class="sig-name descname"><span class="pre">velocity_weight</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.velocity_weight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.denoiser_weight">
+<span class="sig-name descname"><span class="pre">denoiser_weight</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.denoiser_weight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L174-L201"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.loss" title="Link to this definition"></a></dt>
+<dd><p>Loss value for a batch of data. If the eta term is None this corresponds only to the velocity loss.
+Otherwise it gives a weighted average between them based off of init params velocity_weight, and denoiser_weight.</p>
+<div class="math notranslate nohighlight">
+\[\]</div>
+<p>L_{text{velocity}}(theta) = mathbb{E}!left[,lVert brVert^2 - 2, b cdot dot I,right] \
+L_{text{denoiser}}(theta) = mathbb{E}!left[,lVert etarVert^2 - 2, eta cdot z,right] \
+L(theta) = text{velocity_weight},L_{text{velocity}}(theta) + text{denoiser_weight},L_{text{denoiser}}(theta)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p></li>
+<li><p><strong>x_0</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Samples from the base distribution rho_0.</p></li>
+<li><p><strong>x_1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Samples from the data distribution rho_0.</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Latent noise values <span class="math notranslate nohighlight">\(z \sim \mathcal{N}(0, 1)\)</span>.</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Predicted velocity values for <span class="math notranslate nohighlight">\(x_t\)</span>.</p></li>
+<li><p><strong>eta</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Predicted denoiser values for <span class="math notranslate nohighlight">\(x_t\)</span>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>dict[str, torch.Tensor]</em> – A dictionary of loss values, <code class="docutils literal notranslate"><span class="pre">loss</span></code>, <code class="docutils literal notranslate"><span class="pre">loss_velocity</span></code>, and <code class="docutils literal notranslate"><span class="pre">loss_denoiser</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.TrigonometricInterpolant.__slots__">
+<span class="sig-name descname"><span class="pre">__slots__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#e3ti.interpolant.interpolants.TrigonometricInterpolant.__slots__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">e3ti.interpolant.interpolants.</span></span><span class="sig-name descname"><span class="pre">EncoderDecoderInterpolant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">switch_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">denoiser_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L230-L423"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../abstract/index.html#e3ti.interpolant.abstract.LinearInterpolant" title="e3ti.interpolant.abstract.LinearInterpolant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">e3ti.interpolant.abstract.LinearInterpolant</span></code></a></p>
+<p>Encoder-decoder interpolant
+I(t, x_0, x_1) = cos^2(pi * (t - switch_time * t)^p / ((switch_time - switch_time * t)^p +  (t - switch_time * t)^p)) * 1_[0, switch_time) * x_0</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>cos^2(pi * (t - switch_time * t)^p / ((switch_time - switch_time * t)^p + (t - switch_time * t)^p)) * 1_(1-switch_time, 1] * x_1</p></li>
+</ul>
+</div></blockquote>
+<p>between points x_0 and x_1 from two distributions p_0 and p_1 at times t.</p>
+<p>gamma(t) = sqrt(a) * sin^2(pi * (t - switch_time * t)^p / ((switch_time - switch_time * t)^p + (t - switch_time * t)^p))</p>
+<p>For a=1 p=1 and switch_time=0.5, this interpolant becomes
+I(t, x_0, x_1) = cos^2(pi * t) * 1_[0, switch_time) * x_0 + cos^2(pi * t) * 1_(1-switch_time, 1] * x_1,
+and gamma(t) = sin^2(pi * t) which was considered in the stochastic interpolants paper.</p>
+<p>Note that the time derivatives are only bounded for p&gt;=0.5.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Constant a &gt; 0.
+Defaults to 1.0.</p></li>
+<li><p><strong>switch_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Time in (0, 1) at which to switch from x_0 to x_1.
+Defaults to 0.5.</p></li>
+<li><p><strong>power</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Power p in the interpolant.
+Defaults to 1.0.</p></li>
+<li><p><strong>velocity_weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Constant velocity_weight &gt; 0 which scaless loss of the velocity</p></li>
+<li><p><strong>denoiser_weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Constant denoiser_weight &gt; 0 which scaless loss of the denoiser</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If switch_time is not in (0,1) or power is less than 0.5.</p>
+</dd>
+</dl>
+<p>Construct encoder-decoder interpolant.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L283-L297"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.alpha" title="Link to this definition"></a></dt>
+<dd><p>Alpha function alpha(t) in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Values of the alpha function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.alpha_dot">
+<span class="sig-name descname"><span class="pre">alpha_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L299-L321"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.alpha_dot" title="Link to this definition"></a></dt>
+<dd><p>Time derivative of the alpha function in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivatives of the alpha function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.beta">
+<span class="sig-name descname"><span class="pre">beta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L323-L337"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.beta" title="Link to this definition"></a></dt>
+<dd><p>Beta function beta(t) in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Values of the beta function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.beta_dot">
+<span class="sig-name descname"><span class="pre">beta_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L339-L361"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.beta_dot" title="Link to this definition"></a></dt>
+<dd><p>Time derivative of the beta function in the linear interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivatives of the beta function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.get_corrector">
+<span class="sig-name descname"><span class="pre">get_corrector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L363-L371"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.get_corrector" title="Link to this definition"></a></dt>
+<dd><p>Get the corrector implied by the interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Identity corrector that does nothing.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../abstract/index.html#e3ti.interpolant.abstract.Corrector" title="e3ti.interpolant.abstract.Corrector">Corrector</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.gamma">
+<span class="sig-name descname"><span class="pre">gamma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L373-L387"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.gamma" title="Link to this definition"></a></dt>
+<dd><p>Evaluate the gamma function gamma(t) in the latent variable gamma(t) * z at the times t.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Gamma function gamma(t).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.gamma_derivative">
+<span class="sig-name descname"><span class="pre">gamma_derivative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L389-L408"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.gamma_derivative" title="Link to this definition"></a></dt>
+<dd><p>Compute the derivative of the gamma function gamma(t) in the latent variable gamma(t) * z with respect to time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivative of the gamma function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.summarize_cfg">
+<span class="sig-name descname"><span class="pre">summarize_cfg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L410-L423"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.summarize_cfg" title="Link to this definition"></a></dt>
+<dd><p>Prints details about the configuration defining the interpolant</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.interpolate">
+<span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L210-L231"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.interpolate" title="Link to this definition"></a></dt>
+<dd><p>Interpolate between points <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span> from two distributions <span class="math notranslate nohighlight">\(p_0\)</span> and <span class="math notranslate nohighlight">\(p_1\)</span> at times t.</p>
+<p>In order to possibly allow for periodic boundary conditions, x_1 is first unwrapped based on the corrector of
+this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
+this unwrapping returns the closest image of <span class="math notranslate nohighlight">\(x_1\)</span> to <span class="math notranslate nohighlight">\(x_0\)</span>. The interpolant is then computed based on the unwrapped
+<span class="math notranslate nohighlight">\(x_1\)</span> and the alpha and beta functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p></li>
+<li><p><strong>x_0</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from p_0.</p></li>
+<li><p><strong>x_1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from p_1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>tuple[torch.Tensor, torch.Tensor]</em> – Interpolated value and the latent noise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a>[<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a>, <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.interpolate_derivative">
+<span class="sig-name descname"><span class="pre">interpolate_derivative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L233-L256"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.interpolate_derivative" title="Link to this definition"></a></dt>
+<dd><p>Compute the derivative of the interpolant between points <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span> from two distributions <span class="math notranslate nohighlight">\(p_0\)</span> and <span class="math notranslate nohighlight">\(p_1\)</span> at times
+<span class="math notranslate nohighlight">\(t\)</span> with respect to time.</p>
+<p>In order to possibly allow for periodic boundary conditions, <span class="math notranslate nohighlight">\(x_1\)</span> is first unwrapped based on the corrector of
+this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
+this unwrapping returns the closest image of <span class="math notranslate nohighlight">\(x_1\)</span> to <span class="math notranslate nohighlight">\(x_0\)</span>. The interpolant derivative is then computed based on
+the unwrapped <span class="math notranslate nohighlight">\(x_1\)</span> and the alpha and beta functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in <span class="math notranslate nohighlight">\([0,1]\)</span>.</p></li>
+<li><p><strong>x_0</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from <span class="math notranslate nohighlight">\(p_0\)</span>.</p></li>
+<li><p><strong>x_1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from: math:<code class="xref any docutils literal notranslate"><span class="pre">p_1</span></code>.</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>torch.Tensor</em> – Derivative of the interpolant.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.13)"><strong>NotImplementedError</strong></a> – Must be implemented by subclasses.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.velocity_weight">
+<span class="sig-name descname"><span class="pre">velocity_weight</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.velocity_weight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.denoiser_weight">
+<span class="sig-name descname"><span class="pre">denoiser_weight</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.denoiser_weight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.gamma_dot">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gamma_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L152-L165"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.gamma_dot" title="Link to this definition"></a></dt>
+<dd><p>Time derivative <span class="math notranslate nohighlight">\(\gamma'(t)\)</span> in the stochastic interpolant.
+:param t: Times in <span class="math notranslate nohighlight">\([0,1]\)</span>.
+:type t: torch.Tensor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>torch.Tensor</em> – Values of <span class="math notranslate nohighlight">\(\gamma'(t)\)</span> at the given times.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.13)"><strong>NotImplementedError</strong></a> – Must be implemented by subclasses.</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L174-L201"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.loss" title="Link to this definition"></a></dt>
+<dd><p>Loss value for a batch of data. If the eta term is None this corresponds only to the velocity loss.
+Otherwise it gives a weighted average between them based off of init params velocity_weight, and denoiser_weight.</p>
+<div class="math notranslate nohighlight">
+\[\]</div>
+<p>L_{text{velocity}}(theta) = mathbb{E}!left[,lVert brVert^2 - 2, b cdot dot I,right] \
+L_{text{denoiser}}(theta) = mathbb{E}!left[,lVert etarVert^2 - 2, eta cdot z,right] \
+L(theta) = text{velocity_weight},L_{text{velocity}}(theta) + text{denoiser_weight},L_{text{denoiser}}(theta)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p></li>
+<li><p><strong>x_0</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Samples from the base distribution rho_0.</p></li>
+<li><p><strong>x_1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Samples from the data distribution rho_0.</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Latent noise values <span class="math notranslate nohighlight">\(z \sim \mathcal{N}(0, 1)\)</span>.</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Predicted velocity values for <span class="math notranslate nohighlight">\(x_t\)</span>.</p></li>
+<li><p><strong>eta</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Predicted denoiser values for <span class="math notranslate nohighlight">\(x_t\)</span>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>dict[str, torch.Tensor]</em> – A dictionary of loss values, <code class="docutils literal notranslate"><span class="pre">loss</span></code>, <code class="docutils literal notranslate"><span class="pre">loss_velocity</span></code>, and <code class="docutils literal notranslate"><span class="pre">loss_denoiser</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.EncoderDecoderInterpolant.__slots__">
+<span class="sig-name descname"><span class="pre">__slots__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#e3ti.interpolant.interpolants.EncoderDecoderInterpolant.__slots__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">e3ti.interpolant.interpolants.</span></span><span class="sig-name descname"><span class="pre">MirrorInterpolant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">velocity_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">denoiser_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L425-L541"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../abstract/index.html#e3ti.interpolant.abstract.LinearInterpolant" title="e3ti.interpolant.abstract.LinearInterpolant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">e3ti.interpolant.abstract.LinearInterpolant</span></code></a></p>
+<p>Mirror interpolant I(t, x_0, x_1) = x_1 between points x_0 and x_1 from the same distribution p_1 at times t.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>velocity_weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Constant velocity_weight &gt; 0 which scaless loss of the velocity</p></li>
+<li><p><strong>denoiser_weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Constant denoiser_weight &gt; 0 which scaless loss of the denoiser</p></li>
+</ul>
+</dd>
+</dl>
+<p>Construct mirror interpolant.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L442-L454"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.alpha" title="Link to this definition"></a></dt>
+<dd><p>Alpha function alpha(t) in the mirror interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Values of the alpha function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.alpha_dot">
+<span class="sig-name descname"><span class="pre">alpha_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L456-L468"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.alpha_dot" title="Link to this definition"></a></dt>
+<dd><p>Time derivative of the alpha function in the mirror interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivatives of the alpha function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.beta">
+<span class="sig-name descname"><span class="pre">beta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L470-L482"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.beta" title="Link to this definition"></a></dt>
+<dd><p>Beta function beta(t) in the mirror interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Values of the beta function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.beta_dot">
+<span class="sig-name descname"><span class="pre">beta_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L484-L496"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.beta_dot" title="Link to this definition"></a></dt>
+<dd><p>Time derivative of the beta function in the mirror interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivatives of the beta function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.gamma">
+<span class="sig-name descname"><span class="pre">gamma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L498-L510"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.gamma" title="Link to this definition"></a></dt>
+<dd><p>Gamma function in the stochastic interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Values of the gamma function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.gamma_dot">
+<span class="sig-name descname"><span class="pre">gamma_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L512-L524"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.gamma_dot" title="Link to this definition"></a></dt>
+<dd><p>Time derivative of the gamma function in the stochastic interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Derivatives of the gamma function at the given times.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.get_corrector">
+<span class="sig-name descname"><span class="pre">get_corrector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L526-L534"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.get_corrector" title="Link to this definition"></a></dt>
+<dd><p>Get the corrector implied by the interpolant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Identity corrector that does nothing.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../abstract/index.html#e3ti.interpolant.abstract.Corrector" title="e3ti.interpolant.abstract.Corrector">Corrector</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.summarize_cfg">
+<span class="sig-name descname"><span class="pre">summarize_cfg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/interpolants.py#L536-L541"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.summarize_cfg" title="Link to this definition"></a></dt>
+<dd><p>Prints details about the configuration defining the interpolant</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.interpolate">
+<span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L210-L231"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.interpolate" title="Link to this definition"></a></dt>
+<dd><p>Interpolate between points <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span> from two distributions <span class="math notranslate nohighlight">\(p_0\)</span> and <span class="math notranslate nohighlight">\(p_1\)</span> at times t.</p>
+<p>In order to possibly allow for periodic boundary conditions, x_1 is first unwrapped based on the corrector of
+this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
+this unwrapping returns the closest image of <span class="math notranslate nohighlight">\(x_1\)</span> to <span class="math notranslate nohighlight">\(x_0\)</span>. The interpolant is then computed based on the unwrapped
+<span class="math notranslate nohighlight">\(x_1\)</span> and the alpha and beta functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p></li>
+<li><p><strong>x_0</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from p_0.</p></li>
+<li><p><strong>x_1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from p_1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>tuple[torch.Tensor, torch.Tensor]</em> – Interpolated value and the latent noise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a>[<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a>, <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.interpolate_derivative">
+<span class="sig-name descname"><span class="pre">interpolate_derivative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L233-L256"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.interpolate_derivative" title="Link to this definition"></a></dt>
+<dd><p>Compute the derivative of the interpolant between points <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span> from two distributions <span class="math notranslate nohighlight">\(p_0\)</span> and <span class="math notranslate nohighlight">\(p_1\)</span> at times
+<span class="math notranslate nohighlight">\(t\)</span> with respect to time.</p>
+<p>In order to possibly allow for periodic boundary conditions, <span class="math notranslate nohighlight">\(x_1\)</span> is first unwrapped based on the corrector of
+this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
+this unwrapping returns the closest image of <span class="math notranslate nohighlight">\(x_1\)</span> to <span class="math notranslate nohighlight">\(x_0\)</span>. The interpolant derivative is then computed based on
+the unwrapped <span class="math notranslate nohighlight">\(x_1\)</span> and the alpha and beta functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in <span class="math notranslate nohighlight">\([0,1]\)</span>.</p></li>
+<li><p><strong>x_0</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from <span class="math notranslate nohighlight">\(p_0\)</span>.</p></li>
+<li><p><strong>x_1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Points from: math:<code class="xref any docutils literal notranslate"><span class="pre">p_1</span></code>.</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>torch.Tensor</em> – Derivative of the interpolant.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.13)"><strong>NotImplementedError</strong></a> – Must be implemented by subclasses.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.velocity_weight">
+<span class="sig-name descname"><span class="pre">velocity_weight</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.velocity_weight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.denoiser_weight">
+<span class="sig-name descname"><span class="pre">denoiser_weight</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.denoiser_weight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/interpolant/abstract.py#L174-L201"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.loss" title="Link to this definition"></a></dt>
+<dd><p>Loss value for a batch of data. If the eta term is None this corresponds only to the velocity loss.
+Otherwise it gives a weighted average between them based off of init params velocity_weight, and denoiser_weight.</p>
+<div class="math notranslate nohighlight">
+\[\]</div>
+<p>L_{text{velocity}}(theta) = mathbb{E}!left[,lVert brVert^2 - 2, b cdot dot I,right] \
+L_{text{denoiser}}(theta) = mathbb{E}!left[,lVert etarVert^2 - 2, eta cdot z,right] \
+L(theta) = text{velocity_weight},L_{text{velocity}}(theta) + text{denoiser_weight},L_{text{denoiser}}(theta)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Times in [0,1].</p></li>
+<li><p><strong>x_0</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Samples from the base distribution rho_0.</p></li>
+<li><p><strong>x_1</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Samples from the data distribution rho_0.</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Latent noise values <span class="math notranslate nohighlight">\(z \sim \mathcal{N}(0, 1)\)</span>.</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Predicted velocity values for <span class="math notranslate nohighlight">\(x_t\)</span>.</p></li>
+<li><p><strong>eta</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Predicted denoiser values for <span class="math notranslate nohighlight">\(x_t\)</span>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>dict[str, torch.Tensor]</em> – A dictionary of loss values, <code class="docutils literal notranslate"><span class="pre">loss</span></code>, <code class="docutils literal notranslate"><span class="pre">loss_velocity</span></code>, and <code class="docutils literal notranslate"><span class="pre">loss_denoiser</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.interpolant.interpolants.MirrorInterpolant.__slots__">
+<span class="sig-name descname"><span class="pre">__slots__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#e3ti.interpolant.interpolants.MirrorInterpolant.__slots__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

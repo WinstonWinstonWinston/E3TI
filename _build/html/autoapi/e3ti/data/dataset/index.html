@@ -1,0 +1,235 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>e3ti.data.dataset &mdash; e3ti 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            e3ti
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">e3ti</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">e3ti.data.dataset</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/e3ti/data/dataset/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-e3ti.data.dataset">
+<span id="e3ti-data-dataset"></span><h1>e3ti.data.dataset<a class="headerlink" href="#module-e3ti.data.dataset" title="Link to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">e3ti.data.dataset.</span></span><span class="sig-name descname"><span class="pre">E3TIDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_proc_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_proc_ext</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_raw_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_raw_ext</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_frames_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_frames_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_frames_valid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">augement_rotations</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/data/dataset.py#L11-L247"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.Dataset" title="(in PyTorch v2.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.utils.data.Dataset</span></code></a></p>
+<section id="abstract-dataset-class-for-e3ti">
+<h3>Abstract dataset class for E3TI<a class="headerlink" href="#abstract-dataset-class-for-e3ti" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>_dataset_cfg<span class="classifier">DictConfig</span></dt><dd><p>stores all the relevant hydra yaml parameters for the datset configuration</p>
+</dd>
+<dt>processed_data<span class="classifier">list</span></dt><dd><p>list of processed data, each element of the list corresponds to the result of _preprocess_one_*</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.split">
+<span class="sig-name descname"><span class="pre">split</span></span><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.split" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.total_frames_train">
+<span class="sig-name descname"><span class="pre">total_frames_train</span></span><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.total_frames_train" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.total_frames_test">
+<span class="sig-name descname"><span class="pre">total_frames_test</span></span><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.total_frames_test" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.total_frames_valid">
+<span class="sig-name descname"><span class="pre">total_frames_valid</span></span><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.total_frames_valid" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.lag">
+<span class="sig-name descname"><span class="pre">lag</span></span><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.lag" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.normalize" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.node_features">
+<span class="sig-name descname"><span class="pre">node_features</span></span><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.node_features" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.augment_rotations">
+<span class="sig-name descname"><span class="pre">augment_rotations</span></span><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.augment_rotations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.lag_whitening_stats">
+<span class="sig-name descname"><span class="pre">lag_whitening_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unbiased</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/data/dataset.py#L166-L190"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.lag_whitening_stats" title="Link to this definition"></a></dt>
+<dd><p>x      : [T, <a href="#id1"><span class="problematic" id="id2">*</span></a>S] time-major tensor
+t_max  : largest lag to compute (clipped to T-1)
+unbiased: use sample std if True (Torch’s default behavior)
+eps    : small additive to std for numerical safety (e.g., 1e-8)</p>
+<p>Returns:
+MU  : [t_max, <a href="#id3"><span class="problematic" id="id4">*</span></a>S]  where MU[t-1]  = mean over i of (x_{i+t} - x_i) at lag t
+STD : [t_max, <a href="#id5"><span class="problematic" id="id6">*</span></a>S]  where STD[t-1] = std  over i of (x_{i+t} - x_i) at lag t</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>)</p></li>
+<li><p><strong>t_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>unbiased</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.summarize_cfg">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">summarize_cfg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/data/dataset.py#L228-L233"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.summarize_cfg" title="Link to this definition"></a></dt>
+<dd><p>Prints details about the configuration defining the corrector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/data/dataset.py#L239-L240"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.__len__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.__getitem__">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/e3ti/data/dataset.py#L242-L247"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.__getitem__" title="Link to this definition"></a></dt>
+<dd><p>Returns: torch_geometric Data object with keys corresponding to a batch</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="e3ti.data.dataset.E3TIDataset.__add__">
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/winstonwinstonwinston/E3TI/blob/0.1.0/../micromamba/envs/e3ti/lib/python3.11/site-packages/torch/utils/data/dataset.py#L69-L70"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#e3ti.data.dataset.E3TIDataset.__add__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>Dataset</em><em>[</em><em>_T_co</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ConcatDataset[_T_co]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>data_proc_fname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>data_proc_ext</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>data_raw_fname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>data_raw_ext</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>split</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>total_frames_train</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>total_frames_test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>total_frames_valid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>lag</strong> (<em>omegaconf.DictConfig</em>)</p></li>
+<li><p><strong>normalize</strong> (<em>omegaconf.DictConfig</em>)</p></li>
+<li><p><strong>node_features</strong> (<em>omegaconf.DictConfig</em>)</p></li>
+<li><p><strong>augement_rotations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

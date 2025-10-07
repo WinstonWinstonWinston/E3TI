@@ -11,7 +11,7 @@ Welcome to e3ti
 
 What is e3ti?
 -------------
-Equivariant flows and interpolants for geometric ML. Clean API, typed, with docs generated automatically.
+Equivariant stochastic interpolants for geometric rare event sampling. Clean API, typed, with docs generated automatically.
 
 .. toctree::
    :caption: Guides
@@ -19,13 +19,7 @@ Equivariant flows and interpolants for geometric ML. Clean API, typed, with docs
 
    guides/getting_started
    guides/examples
-
-.. toctree::
-   :caption: Interpolants
-   :maxdepth: 2
-
-   interpolants
-
+   
 .. toctree::
    :caption: API
    :maxdepth: 2
