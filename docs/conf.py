@@ -18,30 +18,31 @@ extensions = [
     "myst_parser",
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
-    "sphinx.ext.intersphinx",
+    # "sphinx.ext.intersphinx",  # removed: avoid external links clutter
     "sphinx.ext.linkcode",
-    "autoapi.extension",           # AutoAPI
+    "autoapi.extension",        # AutoAPI
 ]
 
-# AutoAPI config (scans code every build)
+# ----------------------- AutoAPI (emit like e3nn: api/e3ti) -----------------------
 import pathlib as _p
 autoapi_type = "python"
 autoapi_dirs = [str(_p.Path(__file__).resolve().parents[1] / "e3ti")]
-autoapi_root = "api"                      # <<< CHANGED: emit into docs/api/*
-autoapi_add_toctree_entry = True          # <<< CHANGED: create api/index and add toctree
-autoapi_python_class_content = "both"
+autoapi_root = "api"                 # generates docs under docs/api/*
+autoapi_add_toctree_entry = True     # creates api/index and inserts toctree
+autoapi_python_class_content = "class"   # only this class' doc (no base __init__ doc)
+autoapi_member_order = "bysource"        # stable, source-order listing
 autoapi_options = [
     "members",
     "undoc-members",
-    "show-inheritance",
-    "inherited-members",
-    "special-members",
-    "__init__",
+    # no "inherited-members" (hide torch.nn.Module etc.)
+    # no "show-inheritance"  (hide base class boxes)
+    # no "special-members", "__init__"
 ]
 autoapi_keep_files = False
 autoapi_ignore = ["*/tests/*", "*/_*/**", "*/__main__.py"]
 
-# Typing / docstring rendering
+# ----------------------- Typing / docstring rendering -----------------------
+autodoc_inherit_docstrings = False        # do not pull parent docstrings
 autodoc_typehints = "description"
 autodoc_typehints_format = "short"
 autodoc_class_signature = "separated"
@@ -49,15 +50,6 @@ napoleon_google_docstring = True
 napoleon_numpy_docstring = False
 napoleon_use_param = True
 napoleon_use_rtype = False
-
-# -- Intersphinx -------------------------------------------------------------
-intersphinx_mapping = {
-    "python": ("https://docs.python.org/3", None),
-    "torch": ("https://pytorch.org/docs/stable/", None),
-    "numpy": ("https://numpy.org/doc/stable/", None),
-    "torch_geometric": ("https://pytorch-geometric.readthedocs.io/en/latest/", None),
-    "ase": ("https://wiki.fysik.dtu.dk/ase/", None),
-}
 
 # -- HTML --------------------------------------------------------------------
 html_theme = "sphinx_rtd_theme"

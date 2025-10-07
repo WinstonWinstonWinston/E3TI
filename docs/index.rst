@@ -12,6 +12,12 @@ Welcome to e3ti
 What is e3ti?
 -------------
 Equivariant stochastic interpolants for geometric rare event sampling. Clean API, typed, with docs generated automatically.
+   
+.. toctree::
+   :caption: API
+   :maxdepth: 2
+
+   api/e3ti
 
 .. toctree::
    :caption: Guides
@@ -19,11 +25,5 @@ Equivariant stochastic interpolants for geometric rare event sampling. Clean API
 
    guides/getting_started
    guides/examples
-   
-.. toctree::
-   :caption: API
-   :maxdepth: 2
-
-   api/e3ti
 
 
