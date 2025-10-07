@@ -4,118 +4,116 @@ from typing import Dict
 
 
 class Corrector(ABC):
-    """Abstract interface for coordinate/feature correction.
-
-    For instance Use this to implement operations like wrapping back coordinates
-    to a specific cell in periodic boundary conditions
+    """
+    Abstract class for defining a corrector function that corrects the input x (for instance, wrapping back coordinates
+    to a specific cell in periodic boundary conditions).
     """
 
     @abstractmethod
     def correct(self, x: torch.Tensor) -> torch.Tensor:
-        """Return a corrected version of :math:`x`.
+        """
+        Correct the input x.
 
-        Args:
-            x (torch.Tensor): Input tensor to correct.
+        :param x:
+            Input to correct.
+        :type x: torch.Tensor
 
-        Returns:
-            The corrected tensor.
-
-        Raises:
-            NotImplementedError: Subclasses must implement this method.
+        :return:
+            Corrected input.
+        :rtype: torch.Tensor
         """
         raise NotImplementedError
 
     @abstractmethod
     def unwrap(self, x_0: torch.Tensor, x_1: torch.Tensor) -> torch.Tensor:
         """
-        Correct the input :math:`x_1` based on the reference input :math:`x_0` (for instance, return the image of :math:`x_1` closest to :math:`x_0` in
+        Correct the input x_1 based on the reference input x_0 (for instance, return the image of x_1 closest to x_0 in
         periodic boundary conditions).
 
-        Args:
-            x_0 (torch.Tensor): Reference input.
-            x_1 (torch.Tensor): Input to correct.
+        :param x_0:
+            Reference input.
+        :type x_0: torch.Tensor
+        :param x_1:
+            Input to correct.
+        :type x_1: torch.Tensor
 
-        Returns:
-            torch.Tensor: Unwrapped x_1 value.
-
-        Raises:
-            NotImplementedError: Subclasses must implement this method.
+        :return:
+            Unwrapped x_1 value.
+        :rtype: torch.Tensor
         """
         raise NotImplementedError
     
     def summarize_cfg(self):
+        """tr
+        Prints details about the configuration defining the corrector
         """
-        Prints details about the configuration defining the corrector.
-
-        Returns:
-            None
-        
-        Raises:
-            NotImplementedError: Subclasses must implement this method.
-        """
-
         raise NotImplementedError
     
 class Interpolant(ABC):
-    r"""
-    Abstract class for defining an interpolant
-
-    .. math::
-    x_t = I(t, x_0, x_1) + \gamma(t) z
-
-    between points :math:`x_0` and :math:`x_1` from two distributions :math:`p_0` and :math:`p_1` at times :math:`t`.
-
-    Args:
-        velocity_weight (float): Constant velocity_weight > 0 which scaless loss of the velocity
-        denoiser_weight (float): Constant denoiser_weight > 0 which scaless loss of the denoiser
     """
+    Abstract class for defining an interpolant
+    x_t = I(t, x_0, x_1) + gamma(t)z
+    in a stochastic interpolant between points x_0 and x_1 from two distributions p_0 and p_1 at times t.
 
+    :param velocity_weight:
+        Constant velocity_weight > 0 which scaless loss of the velocity
+    :type velocity_weight: float
+    :param denoiser_weight:
+        Constant denoiser_weight > 0 which scaless loss of the denoiser
+    :type velocity_weight: float
+    """
     def __init__(self, velocity_weight: float = 1.0, denoiser_weight: float = 1.0) -> None:
         self.velocity_weight = velocity_weight
         self.denoiser_weight = denoiser_weight
 
-    def interpolate(self, t: torch.Tensor, x_0: torch.Tensor, x_1: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+    def interpolate(self, t: torch.Tensor, x_0: torch.Tensor, x_1: torch.Tensor) -> torch.Tensor:
         """
-        Interpolate between points :math:`x_0` and :math:`x_1` from two distributions :math:`p_0` and :math:`p_1` at times t.
+        Interpolate between points x_0 and x_1 from two distributions p_0 and p_1 at times t.
 
         In order to possibly allow for periodic boundary conditions, x_1 is first unwrapped based on the corrector of
         this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
-        this unwrapping returns the closest image of :math:`x_1` to :math:`x_0`. The interpolant is then computed based on the unwrapped
-        :math:`x_1` and the alpha and beta functions.
+        this unwrapping returns the closest image of x_1 to x_0. The interpolant is then computed based on the unwrapped
+        x_1 and the alpha and beta functions.
 
-        Args:
-            t (torch.Tensor): Times in [0,1].
-            x_0 (torch.Tensor): Points from p_0.
-            x_1 (torch.Tensor): Points from p_1.
+        :param t:
+            Times in [0,1].
+        :type t: torch.Tensor
+        :param x_0:
+            Points from p_0.
+        :type x_0: torch.Tensor
+        :param x_1:
+            Points from p_1.
+        :type x_1: torch.Tensor
 
-        Returns:
-            tuple[torch.Tensor, torch.Tensor]: Interpolated value and the latent noise.
-
-        Raises:
-            NotImplementedError: Must be implemented by subclasses.
+        :return:
+            Interpolated value and the latent noise.
+        :rtype:  tuple[torch.Tensor, torch.Tensor]
         """
         raise NotImplementedError
 
     def interpolate_derivative(self, t: torch.Tensor, x_0: torch.Tensor, x_1: torch.Tensor, z: torch.Tensor) -> torch.Tensor:
         """
-        Compute the derivative of the interpolant between points :math:`x_0` and :math:`x_1` from two distributions :math:`p_0` and :math:`p_1` at times
-        :math:`t` with respect to time.
+        Compute the derivative of the interpolant between points x_0 and x_1 from two distributions p_0 and p_1 at times
+        t with respect to time.
 
-        In order to possibly allow for periodic boundary conditions, :math:`x_1` is first unwrapped based on the corrector of
+        In order to possibly allow for periodic boundary conditions, x_1 is first unwrapped based on the corrector of
         this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
-        this unwrapping returns the closest image of :math:`x_1` to :math:`x_0`. The interpolant derivative is then computed based on
-        the unwrapped :math:`x_1` and the alpha and beta functions.
+        this unwrapping returns the closest image of x_1 to x_0. The interpolant derivative is then computed based on
+        the unwrapped x_1 and the alpha and beta functions.
 
-        Args:
-            t (torch.Tensor): Times in :math:`[0,1]`.
-            x_0 (torch.Tensor): Points from :math:`p_0`.
-            x_1 (torch.Tensor): Points from: math:`p_1`.
+        :param t:
+            Times in [0,1].
+        :type t: torch.Tensor
+        :param x_0:
+            Points from p_0.
+        :type x_0: torch.Tensor
+        :param x_1:
+            Points from p_1.
+        :type x_1: torch.Tensor
 
-        Returns:
-            torch.Tensor: Derivative of the interpolant.
-
-        Raises:
-            NotImplementedError: Must be implemented by subclasses.
+        :return:
+            Derivative of the interpolant.
+        :rtype: torch.Tensor
         """
         raise NotImplementedError
 
@@ -125,42 +123,39 @@ class Interpolant(ABC):
         Get the corrector implied by the interpolant (for instance, a corrector that considers periodic boundary
         conditions).
 
-        Returns:
-            Corrector: Corrector.
-
-        Raises:
-            NotImplementedError: Must be implemented by subclasses.
+        :return:
+            Corrector.
+        :rtype: Corrector
         """
         raise NotImplementedError
     
     @abstractmethod
     def gamma(self, t: torch.Tensor) -> torch.Tensor:
-        r"""
-        Gamma function :math:`\gamma(t)` in the stochastic interpolant.
+        """
+        Beta function gamma(t) in the stochastic interpolant.
 
-        Args:
-            t (torch.Tensor): Times in :math:`[0,1]`.
+        :param t:
+            Times in [0,1].
+        :type t: torch.Tensor
 
-        Returns:
-            torch.Tensor: Values of :math:`\gamma(t)` at the given times.
-        
-        Raises:
-            NotImplementedError: Must be implemented by subclasses.
+        :return:
+            Values of the gamma function at the given times.
+        :rtype: torch.Tensor
         """
         raise NotImplementedError
 
     @abstractmethod
     def gamma_dot(self, t: torch.Tensor):
         """
-        Time derivative :math:`\gamma'(t)` in the stochastic interpolant.
-        Args:
-            t (torch.Tensor): Times in :math:`[0,1]`.
+        Time derivative of the gamma function in the stochastic interpolant.
 
-        Returns:
-            torch.Tensor: Values of :math:`\gamma'(t)` at the given times.
+        :param t:
+            Times in [0,1].
+        :type t: torch.Tensor
 
-        Raises:
-            NotImplementedError: Must be implemented by subclasses.
+        :return:
+            Derivatives of the gamma function at the given times.
+        :rtype: torch.Tensor
         """
         raise NotImplementedError
 
@@ -172,25 +167,36 @@ class Interpolant(ABC):
         print(f"[{self.__class__.__name__}] velocity_weight={self.velocity_weight:.6g}, denoiser_weight={self.denoiser_weight:.6g}")
     
     def loss(self, t, x_0, x_1, z, b, eta=None) -> Dict[str, torch.Tensor]:
-        r"""
+        """
         Loss value for a batch of data. If the eta term is None this corresponds only to the velocity loss.
         Otherwise it gives a weighted average between them based off of init params velocity_weight, and denoiser_weight.
 
-        .. math::
-        L_{\text{velocity}}(\theta) = \mathbb{E}\!\left[\,\lVert b\rVert^2 - 2\, b \cdot \dot I\,\right] \\
-        L_{\text{denoiser}}(\theta) = \mathbb{E}\!\left[\,\lVert \eta\rVert^2 - 2\, \eta \cdot z\,\right] \\
-        L(\theta) = \text{velocity\_weight}\,L_{\text{velocity}}(\theta) + \text{denoiser\_weight}\,L_{\text{denoiser}}(\theta)
+        L_{velocity}(theta) = E[|b|^2 - 2b * I_dot]
+        L_{denoiser}(theta) = E[|eta|^2 - 2eta * z]
+        L(theta) = velocity_weight*L_{velocity}(theta) + denoiser_weight*L_{denoiser}(theta)
 
-        Args:
-            t (torch.Tensor): Times in [0,1].
-            x_0 (torch.Tensor): Samples from the base distribution rho_0.
-            x_1 (torch.Tensor): Samples from the data distribution rho_0.
-            z (torch.Tensor): Latent noise values :math:`z \sim \mathcal{N}(0, 1)`.
-            b (torch.Tensor): Predicted velocity values for :math:`x_t`.
-            eta (torch.Tensor): Predicted denoiser values for :math:`x_t`.
+        :param t:
+            Times in [0,1].
+        :type t: torch.Tensor
+        :param x_0:
+            Samples from the base distribution rho_0.
+        :type x_0: torch.Tensor
+        :param x_1:
+            Samples from the data distribution rho_0.
+        :type x_1: torch.Tensor
+        :param z:
+            Latent noise values z ~ N(0,1).
+        :type t: torch.Tensor
+        :param b:
+            Predicted velocity values for x_t.
+        :type eta: torch.Tensor
+        :param eta:
+            Predicted denoiser values for x_t.
+        :type eta: torch.Tensor
 
-        Returns:
-            dict[str, torch.Tensor]: A dictionary of loss values, ``loss``, ``loss_velocity``, and ``loss_denoiser``.
+        :return:
+            A dictionary of loss values, loss, loss_velocity, and loss_denoiser
+        :rtype: dict[str, torch.Tensor]
         """
         interpolant_dot = self.interpolate_derivative(t,x_0,x_1,z)
         loss_velocity  = torch.mean(torch.einsum('BND,BND->B', b, b    ) - 2*torch.einsum('BND, BND', b, interpolant_dot))
@@ -201,28 +207,33 @@ class Interpolant(ABC):
                 "loss_denoiser": loss_denoiser}
 
 class LinearInterpolant(Interpolant):
-    r"""
-    Abstract class for defining an interpolant
-    :math:`I(t, x_0, x_1) = \alpha(t) x_0 + \beta(t) x_1`
-    in a stochastic setting between points :math:`x_0` and :math:`x_1` from distributions :math:`p_0` and :math:`p_1` at time :math:`t`.
+    """
+    Abstract class for defining an interpolant I(t, x_0, x_1) = alpha(t) * x_0 + beta(t) * x_1 in a stochastic
+    interpolant between points x_0 and x_1 from two distributions p_0 and p_1 at times t.
     """
 
     def interpolate(self, t: torch.Tensor, x_0: torch.Tensor, x_1: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         """
-        Interpolate between points :math:`x_0` and :math:`x_1` from two distributions :math:`p_0` and :math:`p_1` at times t.
+        Interpolate between points x_0 and x_1 from two distributions p_0 and p_1 at times t.
 
         In order to possibly allow for periodic boundary conditions, x_1 is first unwrapped based on the corrector of
         this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
-        this unwrapping returns the closest image of :math:`x_1` to :math:`x_0`. The interpolant is then computed based on the unwrapped
-        :math:`x_1` and the alpha and beta functions.
+        this unwrapping returns the closest image of x_1 to x_0. The interpolant is then computed based on the unwrapped
+        x_1 and the alpha and beta functions.
 
-        Args:
-            t (torch.Tensor): Times in [0,1].
-            x_0 (torch.Tensor): Points from p_0.
-            x_1 (torch.Tensor): Points from p_1.
+        :param t:
+            Times in [0,1].
+        :type t: torch.Tensor
+        :param x_0:
+            Points from p_0.
+        :type x_0: torch.Tensor
+        :param x_1:
+            Points from p_1.
+        :type x_1: torch.Tensor
 
-        Returns:
-            tuple[torch.Tensor, torch.Tensor]: Interpolated value and the latent noise.
+        :return:
+            Interpolated value and the latent noise.
+        :rtype:  tuple[torch.Tensor, torch.Tensor]
         """
         z = torch.randn_like(x_0)
         x_0prime = self.get_corrector().correct(x_0)
@@ -232,24 +243,27 @@ class LinearInterpolant(Interpolant):
 
     def interpolate_derivative(self, t: torch.Tensor, x_0: torch.Tensor, x_1: torch.Tensor, z: torch.Tensor) -> torch.Tensor:
         """
-        Compute the derivative of the interpolant between points :math:`x_0` and :math:`x_1` from two distributions :math:`p_0` and :math:`p_1` at times
-        :math:`t` with respect to time.
+        Compute the derivative of the interpolant between points x_0 and x_1 from two distributions p_0 and p_1 at times
+        t with respect to time.
 
-        In order to possibly allow for periodic boundary conditions, :math:`x_1` is first unwrapped based on the corrector of
+        In order to possibly allow for periodic boundary conditions, x_1 is first unwrapped based on the corrector of
         this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
-        this unwrapping returns the closest image of :math:`x_1` to :math:`x_0`. The interpolant derivative is then computed based on
-        the unwrapped :math:`x_1` and the alpha and beta functions.
+        this unwrapping returns the closest image of x_1 to x_0. The interpolant derivative is then computed based on
+        the unwrapped x_1 and the alpha and beta functions.
 
-        Args:
-            t (torch.Tensor): Times in :math:`[0,1]`.
-            x_0 (torch.Tensor): Points from :math:`p_0`.
-            x_1 (torch.Tensor): Points from: math:`p_1`.
+        :param t:
+            Times in [0,1].
+        :type t: torch.Tensor
+        :param x_0:
+            Points from p_0.
+        :type x_0: torch.Tensor
+        :param x_1:
+            Points from p_1.
+        :type x_1: torch.Tensor
 
-        Returns:
-            torch.Tensor: Derivative of the interpolant.
-
-        Raises:
-            NotImplementedError: Must be implemented by subclasses.
+        :return:
+            Derivative of the interpolant.
+        :rtype: torch.Tensor
         """
         x_0prime = self.get_corrector().correct(x_0)
         x_1prime = self.get_corrector().unwrap(x_0prime, x_1)
@@ -257,65 +271,60 @@ class LinearInterpolant(Interpolant):
 
     @abstractmethod
     def alpha(self, t: torch.Tensor) -> torch.Tensor:
-        r"""
-        Alpha function :math:`\alpha(t)` in the linear interpolant.
+        """
+        Alpha function alpha(t) in the linear interpolant.
 
-        Args:
-            t (torch.Tensor): Times in :math:`[0,1]`.
+        :param t:
+            Times in [0,1].
+        :type t: torch.Tensor
 
-        Returns:
-            torch.Tensor: Values of the alpha function at the given times.
-
-        Raises:
-            NotImplementedError: Must be implemented by subclasses.
+        :return:
+            Values of the alpha function at the given times.
+        :rtype: torch.Tensor
         """
         raise NotImplementedError
 
     @abstractmethod
     def alpha_dot(self, t: torch.Tensor) -> torch.Tensor:
-        r"""
-        Time derivative of the alpha function :math:`\dot{\alpha}(t)` in the linear interpolant.
+        """
+        Time derivative of the alpha function in the linear interpolant.
 
-        Args:
-            t (torch.Tensor): Times in :math:`[0,1]`.
+        :param t:
+            Times in [0,1].
+        :type t: torch.Tensor
 
-        Returns:
-            torch.Tensor: Derivatives of the alpha function at the given times.
-
-        Raises:
-            NotImplementedError: Must be implemented by subclasses.
+        :return:
+            Derivatives of the alpha function at the given times.
+        :rtype: torch.Tensor
         """
         raise NotImplementedError
 
     @abstractmethod
     def beta(self, t: torch.Tensor) -> torch.Tensor:
-        r"""
-        Beta function :math:`\beta(t)` in the linear interpolant.
-
-        Args:
-            t (torch.Tensor): Times in :math:`[0,1]`.
-
-        Returns:
-            torch.Tensor: Values of the beta function at the given times.
-
-        Raises:
-            NotImplementedError: Must be implemented by subclasses.
         """
+        Beta function beta(t) in the linear interpolant.
 
+        :param t:
+            Times in [0,1].
+        :type t: torch.Tensor
+
+        :return:
+            Values of the beta function at the given times.
+        :rtype: torch.Tensor
+        """
         raise NotImplementedError
 
     @abstractmethod
     def beta_dot(self, t: torch.Tensor):
-        r"""
-        Time derivative of the beta function :math:`\dot{\beta}(t)` in the linear interpolant.
+        """
+        Time derivative of the beta function in the linear interpolant.
 
-        Args:
-            t (torch.Tensor): Times in :math:`[0,1]`.
+        :param t:
+            Times in [0,1].
+        :type t: torch.Tensor
 
-        Returns:
-            torch.Tensor: Derivatives of the beta function at the given times.
-
-        Raises:
-            NotImplementedError: Must be implemented by subclasses.
+        :return:
+            Derivatives of the beta function at the given times.
+        :rtype: torch.Tensor
         """
         raise NotImplementedError
