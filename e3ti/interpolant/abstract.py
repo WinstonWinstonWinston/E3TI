@@ -52,7 +52,9 @@ class Corrector(ABC):
 class Interpolant(ABC):
     r"""
     Abstract class for defining an interpolant
-    ..math:
+
+    ..math::
+
         x_t = I(t, x_0, x_1) + \gamma(t)z
     
     in a stochastic interpolant between points  :math:`x_0` and  :math:`x_1` from two distributions  :math:`p_0` and  :math:`p_1` at times t.
@@ -70,11 +72,11 @@ class Interpolant(ABC):
 
     def interpolate(self, t: torch.Tensor, x_0: torch.Tensor, x_1: torch.Tensor) -> torch.Tensor:
         r"""
-        Interpolate between points  :math:`x_0` and  :math:`x_1` from two distributions  :math:`p_0` and  :math:`p_1` at times  :math:`t`.
+        Interpolate between points :math:`x_0` and :math:`x_1` from two distributions :math:`p_0` and :math:`p_1` at times :math:`t`.
 
         In order to possibly allow for periodic boundary conditions, :math:`x_1` is first unwrapped based on the corrector of
         this interpolant. For the identity corrector, this unwrapping does nothing. For periodic boundary conditions,
-        this unwrapping returns the closest image of  :math:`x_1` to  :math:`x_0`. The interpolant is then computed based on the unwrapped
+        this unwrapping returns the closest image of :math:`x_1` to :math:`x_0`. The interpolant is then computed based on the unwrapped
         :math:`x_1` and function :math:`I(t, x_0, x_1)`
 
         :param t:
@@ -132,14 +134,14 @@ class Interpolant(ABC):
     @abstractmethod
     def gamma(self, t: torch.Tensor) -> torch.Tensor:
         r"""
-        Gamma function :math:'\gamma(t)' in the stochastic interpolant.
+        Gamma function :math:`\gamma(t)` in the stochastic interpolant.
 
         :param t:
             Times in :math:`t \in [0,1]`.
         :type t: torch.Tensor
 
         :return:
-            Values of the gamma function :math:'\gamma(t)` at the given times.
+            Values of the gamma function :math:`\gamma(t)` at the given times.
         :rtype: torch.Tensor
         """
         raise NotImplementedError
@@ -147,14 +149,14 @@ class Interpolant(ABC):
     @abstractmethod
     def gamma_dot(self, t: torch.Tensor):
         r"""
-        Time derivative of the gamma function :math:'\dot{\gamma}(t)' in the stochastic interpolant.
+        Time derivative of the gamma function :math:`\dot{\gamma}(t)` in the stochastic interpolant.
 
         :param t:
             Times in :math:`t \in [0,1]`.
         :type t: torch.Tensor
 
         :return:
-            Derivatives of the gamma function :math:'\dot{\gamma}(t)' at the given times.
+            Derivatives of the gamma function :math:`\dot{\gamma}(t)` at the given times.
         :rtype: torch.Tensor
         """
         raise NotImplementedError
@@ -171,14 +173,14 @@ class Interpolant(ABC):
         Loss value for a batch of data. If the eta term is None this corresponds only to the velocity loss.
         Otherwise it gives a weighted average between them based off of init params velocity_weight, and denoiser_weight.
 
-        .. math::
+        ..math::
 
-        \begin{aligned}
-        \mathcal{L}_{\text{velocity}}(\theta) &= \mathbb{E}\!\left[\|b\|^{2} - 2\, b \cdot \dot{I}\right] \\
-        \mathcal{L}_{\text{denoiser}}(\theta) &= \mathbb{E}\!\left[\|\eta\|^{2} - 2\, \eta \cdot z\right] \\
-        \mathcal{L}(\theta) &= \mathrm{velocity\_weight}\,\mathcal{L}_{\text{velocity}}(\theta)
-                    + \mathrm{denoiser\_weight}\,\mathcal{L}_{\text{denoiser}}(\theta)
-        \end{aligned}
+            \mathcal{L}_{\text{velocity}}(\theta) = \mathbb{E}\!\left[\|b\|^{2} - 2\, b \cdot \dot I\right]
+
+            \mathcal{L}_{\text{denoiser}}(\theta) = \mathbb{E}\!\left[\|\eta\|^{2} - 2\, \eta \cdot z\right]
+
+            \mathcal{L}(\theta) = \mathrm{velocity\_weight}\,\mathcal{L}_{\text{velocity}}(\theta) + \mathrm{denoiser\_weight}\,\mathcal{L}_{\text{denoiser}}(\theta)
+
 
         :param t:
             Times in :math:`t \in [0,1]`.
@@ -215,7 +217,8 @@ class LinearInterpolant(Interpolant):
     r"""
     Abstract class for defining a spatially linear interpolant
 
-    ..math:
+    ..math::
+
         I(t, x_0, x_1) = \alpha(t)\cdot x_0 + \beta(t) \cdot x_1
      
     in a stochastic interpolant between points :math:`x_0` and :math:`x_1` from two distributions 
@@ -226,8 +229,9 @@ class LinearInterpolant(Interpolant):
         r"""
         Interpolate between points x_0 and x_1 from two distributions p_0 and p_1 at times t.
 
-        ..math:
-                x_t = \alpha(t)\cdot x_0 + \beta(t) \cdot x_1 + \gamma(y)\cdot z
+        ..math::
+            
+            x_t = \alpha(t)\cdot x_0 + \beta(t) \cdot x_1 + \gamma(y)\cdot z
 
         :param t:
             Times in :math:`t \in [0,1]`.
@@ -246,6 +250,11 @@ class LinearInterpolant(Interpolant):
         z = torch.randn_like(x_0)
         x_0prime = self.get_corrector().correct(x_0)
         x_1prime = self.get_corrector().unwrap(x_0prime, x_1)
+
+        print(x_0prime.size())
+        print(x_1prime.size())
+        print(t.size())
+
         x_t = self.alpha(t) * x_0prime + self.beta(t) * x_1prime + z*self.gamma(t)
         return self.get_corrector().correct(x_t), z
 
@@ -254,8 +263,9 @@ class LinearInterpolant(Interpolant):
          Compute the derivative of the interpolant :math:`\dot{x}_t` with respect to time between points :math:`x_0` and :math:`x_1` 
         from two distributions :math:`p_0` and :math:`p_1` at times :math:`t`.
 
-        ..math:
-                \dot{x_t} = \dot{\alpha(t)}\cdot x_0 + \dot{\beta(t)}\cdot x_1 + \dot{\gamma(y)}\cdot z
+        ..math::
+        
+            \dot{x_t} = \dot{\alpha(t)}\cdot x_0 + \dot{\beta(t)}\cdot x_1 + \dot{\gamma(y)}\cdot z
 
         :param t:
             Times in :math:`t \in [0,1]`.

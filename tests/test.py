@@ -28,7 +28,7 @@ def main(cfg: DictConfig):
         OmegaConf.set_struct(cfg.model, True)
         logger.info(f'Loaded warm start config from {warm_start_cfg_path}')
 
-    exp = Train(cfg)
+    exp = Train(cfg,logger)
     exp.run()
 
 if __name__ == "__main__":
