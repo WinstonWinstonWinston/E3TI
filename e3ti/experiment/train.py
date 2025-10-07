@@ -59,16 +59,16 @@ class Train(Experiment):
     def run(self):
         callbacks = []
        
-        # # Setup lightning wandb connection
-        # wbLogger = WandbLogger(
-        #     **self.train_cfg.wandb,
-        # )
+        # Setup lightning wandb connection
+        wbLogger = WandbLogger(
+            **self.train_cfg.wandb,
+        )
         
-        # wbLogger.watch(
-        #     self.module,
-        #     log=self.train_cfg.wandb_watch.log,
-        #     log_freq=self.train_cfg.wandb_watch.log_freq
-        # )
+        wbLogger.watch(
+            self.module,
+            log=self.train_cfg.wandb_watch.log,
+            log_freq=self.train_cfg.wandb_watch.log_freq
+        )
 
         # Checkpoint directory.
         ckpt_dir = self.train_cfg.checkpointer.dirpath
@@ -83,15 +83,14 @@ class Train(Experiment):
         
         # Save config only for main process.
         local_rank = os.environ.get('LOCAL_RANK', 0)
-        # if local_rank == 0:
-        #     cfg_path = os.path.join(ckpt_dir, 'config.yaml')
-        #     with open(cfg_path, 'w') as f:
-        #         OmegaConf.save(config=self.cfg, f=f.name)
-        #     cfg_dict = OmegaConf.to_container(self.cfg, resolve=True)
-        #     flat_cfg = dict(flatten_dict(cfg_dict))
-        #     if isinstance(wbLogger.experiment.config, wandb.sdk.wandb_config.Config): # type: ignore
-        #         wbLogger.experiment.config.update(flat_cfg, allow_val_change=True)
-        # logger=wbLogger,
+        if local_rank == 0:
+            cfg_path = os.path.join(ckpt_dir, 'config.yaml')
+            with open(cfg_path, 'w') as f:
+                OmegaConf.save(config=self.cfg, f=f.name)
+            cfg_dict = OmegaConf.to_container(self.cfg, resolve=True)
+            flat_cfg = dict(flatten_dict(cfg_dict))
+            if isinstance(wbLogger.experiment.config, wandb.sdk.wandb_config.Config): # type: ignore
+                wbLogger.experiment.config.update(flat_cfg, allow_val_change=True)
         trainer = Trainer(
             **self.train_cfg.trainer,
             callbacks=callbacks,
@@ -99,6 +98,7 @@ class Train(Experiment):
             enable_progress_bar=True,
             enable_model_summary=True,
             devices=1 if self.train_cfg.trainer.accelerator == "cpu" else self.train_device_ids,
+            logger=wbLogger,
             # detect_anomaly=True
         )
 

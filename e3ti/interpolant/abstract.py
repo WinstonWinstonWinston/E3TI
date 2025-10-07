@@ -173,14 +173,9 @@ class Interpolant(ABC):
         Loss value for a batch of data. If the eta term is None this corresponds only to the velocity loss.
         Otherwise it gives a weighted average between them based off of init params velocity_weight, and denoiser_weight.
 
-        .. math::
-
-            \mathcal{L}_{\text{velocity}}(\theta) = \mathbb{E}\!\left[\|b\|^{2} - 2\, b \cdot \dot I\right]
-
-            \mathcal{L}_{\text{denoiser}}(\theta) = \mathbb{E}\!\left[\|\eta\|^{2} - 2\, \eta \cdot z\right]
-
-            \mathcal{L}(\theta) = \mathrm{velocity\_weight}\,\mathcal{L}_{\text{velocity}}(\theta) + \mathrm{denoiser\_weight}\,\mathcal{L}_{\text{denoiser}}(\theta)
-
+        * :math:`\mathcal{L}_{\text{velocity}}(\theta) = \mathbb{E}\!\left[\|b\|^{2} - 2\, b \cdot \dot I\right]`
+        * :math:`\mathcal{L}_{\text{denoiser}}(\theta) = \mathbb{E}\!\left[\|\eta\|^{2} - 2\, \eta \cdot z\right]'
+        * :math:`\mathcal{L}(\theta) = \mathrm{velocity\_weight}\,\mathcal{L}_{\text{velocity}}(\theta) + \mathrm{denoiser\_weight}\,\mathcal{L}_{\text{denoiser}}(\theta)'
 
         :param t:
             Times in :math:`t \in [0,1]`.
@@ -260,7 +255,7 @@ class LinearInterpolant(Interpolant):
 
         .. math::
         
-            \dot{x_t} = \dot{\alpha(t)}\cdot x_0 + \dot{\beta(t)}\cdot x_1 + \dot{\gamma(y)}\cdot z
+            \dot{x_t} = \dot{\alpha}(t)\cdot x_0 + \dot{\beta}(t)\cdot x_1 + \dot{\gamma}(y)\cdot z
 
         :param t:
             Times in :math:`t \in [0,1]`.
@@ -301,14 +296,14 @@ class LinearInterpolant(Interpolant):
     @abstractmethod
     def alpha_dot(self, t: torch.Tensor) -> torch.Tensor:
         r"""
-        Derivative of the alpha function :math:`\dot{\alpha(t)}` in the linear interpolant.
+        Derivative of the alpha function :math:`\dot{\alpha}(t)` in the linear interpolant.
 
         :param t:
             Times in :math:`t \in [0,1]`.
         :type t: torch.Tensor
 
         :return:
-            Derivatives of the alpha function :math:`\dot{\alpha(t)}` at the given times :math:`t`.
+            Derivatives of the alpha function :math:`\dot{\alpha}(t)` at the given times :math:`t`.
         :rtype: torch.Tensor
         """
         raise NotImplementedError
@@ -331,14 +326,14 @@ class LinearInterpolant(Interpolant):
     @abstractmethod
     def beta_dot(self, t: torch.Tensor):
         r"""
-        Derivative of the beta function :math:`\dot{\beta(t)}` in the linear interpolant.
+        Derivative of the beta function :math:`\dot{\beta}(t)` in the linear interpolant.
 
         :param t:
             Times in :math:`t \in [0,1]`.
         :type t: torch.Tensor
 
         :return:
-            Derivatives of the beta function :math:`\dot{\beta(t)}` at the given times :math:`t`.
+            Derivatives of the beta function :math:`\dot{\beta}(t)` at the given times :math:`t`.
         :rtype: torch.Tensor
         """
         raise NotImplementedError

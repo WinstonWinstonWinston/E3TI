@@ -9,9 +9,9 @@ dataset:
     split: null
 
     # how to split up the dataset
-    total_frames_train : 512
-    total_frames_test : 128
-    total_frames_valid : 128
+    total_frames_train : 25000
+    total_frames_test : 5000
+    total_frames_valid : 5000
     
     # type of lag
     lag:
@@ -40,6 +40,6 @@ loader:
     num_workers: 16
     prefetch_factor: 8
     batch_size:
-        train: 64
-        valid: 64
-        test: 64
+        train: 128
+        valid: 128
+        test: 128
