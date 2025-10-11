@@ -1,6 +1,7 @@
 from torch import Tensor
 from torch_geometric.data import Data
 from e3ti.prior.abstract import E3TIPrior
+from e3nn.o3 import Irreps
 import torch
 import math
 
@@ -39,7 +40,9 @@ class NormalPrior(E3TIPrior):
         t_interpolant = torch.rand(B, device=device) if not stratified else torch.cat([(i + torch.rand(B//4 + (i < B%4), device=device))/4 for i in range(4)])
 
         batch['x_base'] = x_base
+        batch['x_base_irrep'] = Irreps("1o")
         batch['t_interpolant'] = t_interpolant
+        batch['t_interpolant_irrep'] = Irreps("0e")
         return batch
 
     def log_prob(self, batch: Data) -> Tensor:

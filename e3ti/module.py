@@ -4,6 +4,7 @@ import torch
 from pytorch_lightning import LightningModule
 import hydra
 from e3ti import utils
+from e3nn.o3 import Irreps
 
 class E3TIModule(LightningModule):
 
@@ -80,7 +81,9 @@ class E3TIModule(LightningModule):
         batch = self.prior.sample(batch)
         x_t, z = self.interpolant.interpolate(*utils.batch2interp(batch))
         batch['x_t'] = x_t
+        batch['x_t_irrep'] = Irreps("1o"),
         batch['z'] = z
+        batch['z_irrep'] = Irreps("1o")
         batch = self.forward(batch)
         loss = self.interpolant.loss(*utils.batch2loss(batch))
         self.log_dict({f"train/{k}": v for k, v in loss.items()},on_step=True, prog_bar=True, logger=True)
@@ -106,7 +109,9 @@ class E3TIModule(LightningModule):
         batch = self.prior.sample(batch, stratified=self.cfg.validation.stratified)
         x_t, z = self.interpolant.interpolate(*utils.batch2interp(batch))
         batch['x_t'] = x_t
+        batch['x_t_irrep'] = Irreps("1o"),
         batch['z'] = z
+        batch['z_irrep'] = Irreps("1o")
         batch = self.forward(batch)
         # TODO: Fix interpolant to have stratified flag
         loss = self.interpolant.loss(*utils.batch2loss(batch,stratified=self.cfg.validation.stratified))

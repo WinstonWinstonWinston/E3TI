@@ -5,7 +5,6 @@ from torch_geometric.data import Data
 from e3ti.model.embedding.time import TimeEmbed
 from e3ti.utils import parse_activation
 
-
 class EquilibriumEmbedder(nn.Module):
     r"""
     Node feature embedder that concatenates (i) atom-type embeddings,

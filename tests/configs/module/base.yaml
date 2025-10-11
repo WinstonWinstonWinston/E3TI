@@ -2,7 +2,7 @@
 defaults:
   - prior: NormalPrior
   - embedder: EquilibriumEmbedder
-  - model: MultiSE3Transformer
+  - model: MLP
   - interpolant: TemporallyLinearInterpolant
   # - module/experiment: default
   - _self_

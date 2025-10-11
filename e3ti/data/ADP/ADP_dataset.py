@@ -176,7 +176,7 @@ class ADPDataset(E3TIDataset):
 
                 name=data['name'],
                 
-                t_irrep=Irreps("1e"),
+                t_irrep=Irreps("0e"),
                 x_0_irrep=Irreps("1o"),
                 x_irrep=Irreps("1o"),
                 charge_irrep=Irreps("0e"),
