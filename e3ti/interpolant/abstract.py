@@ -175,7 +175,7 @@ class Interpolant(ABC):
 
         * :math:`\mathcal{L}_{\text{velocity}}(\theta) = \mathbb{E}\!\left[\|b\|^{2} - 2\, b \cdot \dot I\right]`
         * :math:`\mathcal{L}_{\text{denoiser}}(\theta) = \mathbb{E}\!\left[\|\eta\|^{2} - 2\, \eta \cdot z\right]`
-        * :math:`(\mathrm{denoiser\_weight}+ \mathrm{velocity\_weight})\mathcal{L}(\theta) = \mathrm{velocity\_weight}\,\mathcal{L}_{\text{velocity}}(\theta) + \mathrm{denoiser\_weight}\,\mathcal{L}_{\text{denoiser}}(\theta)`
+        * :math:`(w_\eta + w_b)\mathcal{L}(\theta) = w_b\,\mathcal{L}_{\text{velocity}}(\theta) + w_\eta\,\mathcal{L}_{\text{denoiser}}(\theta)`
 
         :param t:
             Times in :math:`t \in [0,1]`.
@@ -215,17 +215,15 @@ class Interpolant(ABC):
 
         .. math::
 
-        dX_t = \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\,dt
-                + \sqrt{2\,\epsilon(t)}\,dW_t
+            dX_t = \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\,dt + \sqrt{2\,\epsilon(t)}\,dW_t
 
         Discrete update:
 
         .. math::
 
-        X_{t+\Delta t} = x_t
-            + \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\Delta t
-            + \sqrt{2\,\epsilon(t)\,\Delta t}\;\xi,\quad
-            \xi \sim \mathcal N(0,I)
+            X_{t+\Delta t} = x_t + \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\Delta t + \sqrt{2\,\epsilon(t)\,\Delta t}\;\xi,\quad
+        
+        where :math: `\xi \sim \mathcal N(0,I)`.
 
         :param x_t: State at time :math:`t`.
         :type x_t: torch.Tensor
@@ -293,12 +291,12 @@ class Interpolant(ABC):
             X_{t+\Delta t} = X_t + b(X_t,t)\,\Delta t.
 
         For the SDE case (Euler-Maruyama):
-        
+
         .. math::
 
             X_{t+\Delta t} = X_t + \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\Delta t + \sqrt{2\,\epsilon(t)\,\Delta t}\;\xi,\quad
     
-        where `\xi \sim \mathcal N(0,I)`.
+        where :math:`\xi \sim \mathcal N(0,I)`.
 
         :param batch: Mini-batch dict with at least ``'x'`` (current state).
         :type batch: Dict[str, torch.Tensor]
