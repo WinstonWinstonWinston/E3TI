@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import torch
-from typing import Callable, Dict
+from typing import Dict
 
 
 class Corrector(ABC):
@@ -175,7 +175,7 @@ class Interpolant(ABC):
 
         * :math:`\mathcal{L}_{\text{velocity}}(\theta) = \mathbb{E}\!\left[\|b\|^{2} - 2\, b \cdot \dot I\right]`
         * :math:`\mathcal{L}_{\text{denoiser}}(\theta) = \mathbb{E}\!\left[\|\eta\|^{2} - 2\, \eta \cdot z\right]`
-        * :math:`\mathcal{L}(\theta) = \mathrm{velocity\_weight}\,\mathcal{L}_{\text{velocity}}(\theta) + \mathrm{denoiser\_weight}\,\mathcal{L}_{\text{denoiser}}(\theta)`
+        * :math:`(\mathrm{denoiser\_weight}+ \mathrm{velocity\_weight})\mathcal{L}(\theta) = \mathrm{velocity\_weight}\,\mathcal{L}_{\text{velocity}}(\theta) + \mathrm{denoiser\_weight}\,\mathcal{L}_{\text{denoiser}}(\theta)`
 
         :param t:
             Times in :math:`t \in [0,1]`.
@@ -203,7 +203,7 @@ class Interpolant(ABC):
         interpolant_dot = self.interpolate_derivative(t,x_0,x_1,z)
         loss_velocity  = torch.mean(torch.einsum('BD,BD->B', b, b    ) - 2*torch.einsum('BD, BD', b, interpolant_dot))
         loss_denoiser  = torch.mean(torch.einsum('BD,BD->B', eta, eta) - 2*torch.einsum('BD, BD', eta, z) if eta is not None else torch.zeros_like(loss_velocity))
-        loss = self.velocity_weight*loss_velocity + self.denoiser_weight*loss_denoiser
+        loss = (self.velocity_weight*loss_velocity + self.denoiser_weight*loss_denoiser)/(self.velocity_weight + self.denoiser_weight)
         return {"loss": loss,
                 "loss_velocity": loss_velocity,
                 "loss_denoiser": loss_denoiser}
@@ -212,12 +212,16 @@ class Interpolant(ABC):
         r"""One Euler-Maruyama step for an SDE with time-dependent noise.
 
         Continuous form:
+
         .. math::
+
         dX_t = \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\,dt
                 + \sqrt{2\,\epsilon(t)}\,dW_t
 
         Discrete update:
+
         .. math::
+
         X_{t+\Delta t} = x_t
             + \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\Delta t
             + \sqrt{2\,\epsilon(t)\,\Delta t}\;\xi,\quad
@@ -248,12 +252,16 @@ class Interpolant(ABC):
         r"""One forward Euler step for an ODE.
 
         Continuous form:
+
         .. math::
-        \tfrac{d}{dt}X_t = b(X_t,t)
+
+            \tfrac{d}{dt}X_t = b(X_t,t)
 
         Discrete update:
+
         .. math::
-        X_{t+\Delta t} = X_t + b(X_t,t)\,\Delta t
+
+            X_{t+\Delta t} = X_t + b(X_t,t)\,\Delta t
 
         :param x_t: State at time :math:`t`.
         :type x_t: torch.Tensor
@@ -279,15 +287,18 @@ class Interpolant(ABC):
         r"""Integrate the (S)DE forward and save the trajectory of :math:`x_t`.
 
         For the ODE case (forward Euler):
+
         .. math::
-        X_{t+\Delta t} = X_t + b(X_t,t)\,\Delta t.
+
+            X_{t+\Delta t} = X_t + b(X_t,t)\,\Delta t.
 
         For the SDE case (Euler-Maruyama):
+        
         .. math::
-        X_{t+\Delta t} = X_t
-            + \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\Delta t
-            + \sqrt{2\,\epsilon(t)\,\Delta t}\;\xi,\quad
-            \xi \sim \mathcal N(0,I).
+
+            X_{t+\Delta t} = X_t + \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\Delta t + \sqrt{2\,\epsilon(t)\,\Delta t}\;\xi,\quad
+    
+        where `\xi \sim \mathcal N(0,I)`.
 
         :param batch: Mini-batch dict with at least ``'x'`` (current state).
         :type batch: Dict[str, torch.Tensor]

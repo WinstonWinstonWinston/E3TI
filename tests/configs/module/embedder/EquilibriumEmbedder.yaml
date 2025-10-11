@@ -2,7 +2,6 @@ _target_: e3ti.model.embedding.equilibrium_embedder.EquilibriumEmbedder
 use_ff: True
 
 interp_time:
-    _target_: e3ti.model.embedding.time.TimeEmbed
     embedding_dim: 64
     max_positions: 1000
 

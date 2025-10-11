@@ -27,17 +27,14 @@ class TimeEmbed(torch.nn.Module):
     tensor2tensor, but differs slightly from the description in Section 3.5 of "Attention Is All You Need". 
     Code from https://github.com/hojonathanho/diffusion/blob/master/diffusion_tf/nn.py
 
-    :param embedding_dim:
-        The length of the embedding vector for a time embed.
-    :type embedding_dim: int
-    :param max_positions:
-        Determines the frequency scale of the embedding
-    :type max_positions: int
+    :param timecfg:
+        Config with ``embedding_dim`` (output size :math:`D`) and ``max_positions`` (the scale :math:`m`).
+    :type timecfg: DictConfig
     """
-    def __init__(self, embedding_dim: int, max_positions:int) -> None:    
+    def __init__(self, cfg) -> None:    
         super().__init__()
-        self.embedding_dim = embedding_dim
-        self.max_positions = max_positions
+        self.embedding_dim = cfg.embedding_dim
+        self.max_positions = cfg.max_positions
 
     def forward(self, timesteps) -> torch.Tensor:
         r"""

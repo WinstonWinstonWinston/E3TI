@@ -2,8 +2,8 @@ import torch
 from torch import nn
 from e3nn.o3 import Irreps
 from torch_geometric.data import Data
+from e3ti.model.embedding.time import TimeEmbed
 from e3ti.utils import parse_activation
-import hydra
 
 
 class EquilibriumEmbedder(nn.Module):
@@ -46,7 +46,7 @@ class EquilibriumEmbedder(nn.Module):
         super().__init__()
         self.use_ff = use_ff
 
-        self.interpolant_time_embedder = hydra.utils.instantiate(interp_time)
+        self.interpolant_time_embedder = TimeEmbed(interp_time)
 
         if self.use_ff:
             self.ff_embedder = MLPWithBN(
