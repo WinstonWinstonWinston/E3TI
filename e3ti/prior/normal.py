@@ -1,4 +1,3 @@
-from typing import Any
 from torch import Tensor
 from torch_geometric.data import Data
 from e3ti.prior.abstract import E3TIPrior

@@ -1,51 +1,52 @@
 import torch
-from e3ti.model.embedding.time import TimeEmbed
 from torch import nn
 from e3nn.o3 import Irreps
 from torch_geometric.data import Data
 from e3ti.utils import parse_activation
+import hydra
+
 
 class EquilibriumEmbedder(nn.Module):
+    r"""
+    Node feature embedder that concatenates (i) atom-type embeddings,
+    (ii) an interpolant time embedding, and (optionally) (iii) force-field
+    scalars passed through an MLP.
+
+    .. math::
+
+        \mathbf{f}_i
+        \;=\;
+        \big[\, \mathbf{e}^{(\text{atom})}_{a_i}
+        \;\Vert\;
+        \mathbf{e}^{(t)}_{t}
+        \;\Vert\;
+        \mathbf{e}^{(\text{ff})}_{i} \,\big]
+
+    where :math:`\mathbf{e}^{(\text{ff})}_{i}` is present only if
+    :code:`use_ff=True`. The resulting representation is treated as
+    :math:`D` copies of the scalar even irrep :math:`0e`, i.e.
+    :math:`\text{Irreps}(D\times 0e)`.
+
+    :param use_ff:
+        Whether to include force-field features (charge, mass, sigma, epsilon).
+    :type use_ff: bool
+    :param interp_time:
+        Configuration for :class:`TimeEmbed` used on the graph-level interpolant time.
+    :type interp_time: Any
+    :param force_field:
+        Namespace/struct with fields ``in_dim``, ``hidden_dims``, ``out_dim``,
+        ``activation``, ``use_input_bn``, ``affine``, ``track_running_stats``.
+        Required only if :code:`use_ff=True`.
+    :type force_field: Any
+    :param atom_type:
+        Namespace/struct with fields ``num_types`` and ``embedding_dim``.
+    :type atom_type: Any
+    """
     def __init__(self, use_ff, interp_time, force_field, atom_type) -> None:
-        r"""
-        Node feature embedder that concatenates (i) atom-type embeddings,
-        (ii) an interpolant time embedding, and (optionally) (iii) force-field
-        scalars passed through an MLP.
-
-        .. math::
-
-            \mathbf{f}_i
-            \;=\;
-            \big[\, \mathbf{e}^{(\text{atom})}_{a_i}
-            \;\Vert\;
-            \mathbf{e}^{(t)}_{t}
-            \;\Vert\;
-            \mathbf{e}^{(\text{ff})}_{i} \,\big]
-
-        where :math:`\mathbf{e}^{(\text{ff})}_{i}` is present only if
-        :code:`use_ff=True`. The resulting representation is treated as
-        :math:`D` copies of the scalar even irrep :math:`0e`, i.e.
-        :math:`\text{Irreps}(D\times 0e)`.
-
-        :param use_ff:
-            Whether to include force-field features (charge, mass, sigma, epsilon).
-        :type use_ff: bool
-        :param interp_time:
-            Configuration for :class:`TimeEmbed` used on the graph-level interpolant time.
-        :type interp_time: Any
-        :param force_field:
-            Namespace/struct with fields ``in_dim``, ``hidden_dims``, ``out_dim``,
-            ``activation``, ``use_input_bn``, ``affine``, ``track_running_stats``.
-            Required only if :code:`use_ff=True`.
-        :type force_field: Any
-        :param atom_type:
-            Namespace/struct with fields ``num_types`` and ``embedding_dim``.
-        :type atom_type: Any
-        """
         super().__init__()
         self.use_ff = use_ff
 
-        self.interpolant_time_embedder = TimeEmbed(interp_time)
+        self.interpolant_time_embedder = hydra.utils.instantiate(interp_time)
 
         if self.use_ff:
             self.ff_embedder = MLPWithBN(
@@ -69,7 +70,7 @@ class EquilibriumEmbedder(nn.Module):
         by concatenating available embeddings and store them into the batch.
 
         Expected fields in :code:`batch`:
-          - ``atom_type``: Long tensor of shape :math:`(B\!\cdot\!N,)`.
+          - ``atom_type``: Long tensor of shape :math:`(B\!\cdot\!N, )`.
           - ``t_interpolant``: Float tensor of shape :math:`(B,)`.
           - If :code:`use_ff=True`: ``charge``, ``mass``, ``sigma``, ``epsilon``
             each of shape :math:`(B\!\cdot\!N,)`.
@@ -175,10 +176,10 @@ class MLPWithBN(nn.Module):
         Apply the MLP to inputs.
 
         :param x:
-            Input tensor of shape :math:`(B, \text{in\_dim})`.
+            Input tensor of shape :math:`(B, \text{in_dim})`.
         :type x: torch.Tensor
         :return:
-            Output tensor of shape :math:`(B, \text{out\_dim})`.
+            Output tensor of shape :math:`(B, \text{out_dim})`.
         :rtype: torch.Tensor
         """
         return self.net(x)

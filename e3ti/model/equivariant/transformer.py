@@ -3,7 +3,7 @@ from torch_cluster import radius_graph
 from torch_scatter import scatter,scatter_max
 from e3nn import o3
 import e3nn.nn as enn
-from e3nn.o3 import Linear,FullyConnectedTensorProduct
+from e3nn.o3 import Linear
 from e3nn.nn import BatchNorm
 from e3nn.math import soft_unit_step, soft_one_hot_linspace
 from e3ti.utils import channels_arr_to_string, parse_activation
@@ -187,7 +187,9 @@ class SE3Transformer(torch.nn.Module):
         return scatter((alpha.relu() + self.eps).sqrt() * v, edge_dst, dim=0, dim_size=len(f))
 
 class MultiSE3Transformer(torch.nn.Module):
-
+    r"""
+    TODO Describe me :)
+    """
     def __init__(self, input_channels,
                  readout_channels,
                  hidden_channels,

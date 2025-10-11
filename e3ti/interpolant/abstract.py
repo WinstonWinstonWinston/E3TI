@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import torch
-from typing import Dict
+from typing import Callable, Dict
 
 
 class Corrector(ABC):
@@ -207,6 +207,162 @@ class Interpolant(ABC):
         return {"loss": loss,
                 "loss_velocity": loss_velocity,
                 "loss_denoiser": loss_denoiser}
+
+    def step_sde(self, x_t:torch.Tensor, b:torch.Tensor, eta:torch.Tensor, t:torch.Tensor, dt:float, epsilon) -> torch.Tensor:
+        r"""One Euler-Maruyama step for an SDE with time-dependent noise.
+
+        Continuous form:
+        .. math::
+        dX_t = \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\,dt
+                + \sqrt{2\,\epsilon(t)}\,dW_t
+
+        Discrete update:
+        .. math::
+        X_{t+\Delta t} = x_t
+            + \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\Delta t
+            + \sqrt{2\,\epsilon(t)\,\Delta t}\;\xi,\quad
+            \xi \sim \mathcal N(0,I)
+
+        :param x_t: State at time :math:`t`.
+        :type x_t: torch.Tensor
+        :param b: Drift term.
+        :type b: torch.Tensor | float
+        :param eta: Coefficient in the drift correction.
+        :type eta: torch.Tensor | float
+        :param t: Current time (used in :math:`\epsilon(t), \gamma(t)`).
+        :type t: torch.Tensor | float
+        :param dt: Time step :math:`\Delta t > 0`.
+        :type dt: float
+        :param epsilon: Noise schedule :math:`\epsilon(t)`.
+        :type epsilon: Callable[[torch.Tensor | float], torch.Tensor | float]
+        :returns: Next state :math:`X_{t+\Delta t}` (same shape/device as ``x_t``).
+        :rtype: torch.Tensor
+        """
+        return (
+            x_t                                                     # Previous state
+            + (b - epsilon(t) * eta / self.gamma(t)) * dt           # drift
+            + (2 * epsilon(t) * dt) ** 0.5 * torch.randn_like(x_t)  # volatility
+        )
+
+    def step_ode(self, x_t: torch.Tensor, b:torch.Tensor, dt:float) -> torch.Tensor:
+        r"""One forward Euler step for an ODE.
+
+        Continuous form:
+        .. math::
+        \tfrac{d}{dt}X_t = b(X_t,t)
+
+        Discrete update:
+        .. math::
+        X_{t+\Delta t} = X_t + b(X_t,t)\,\Delta t
+
+        :param x_t: State at time :math:`t`.
+        :type x_t: torch.Tensor
+        :param b: Drift/velocity evaluated at :math:`(x_t, t)`.
+        :type b: torch.Tensor | float
+        :param dt: Time step :math:`\Delta t > 0`.
+        :type dt: float
+        :returns: Next state :math:`x_{t+\Delta t}` (same shape/device as ``x_t``).
+        :rtype: torch.Tensor
+        """
+        return x_t + b*dt
+
+
+    def integrate(
+        self,
+        batch: Dict[str, torch.Tensor],
+        model,
+        dt: float,
+        step_type: str = "sde",
+        clip_val: float = 1e-3,
+        epsilon=lambda t: t,
+    ) -> Dict[str, torch.Tensor]:
+        r"""Integrate the (S)DE forward and save the trajectory of :math:`x_t`.
+
+        For the ODE case (forward Euler):
+        .. math::
+        X_{t+\Delta t} = X_t + b(X_t,t)\,\Delta t.
+
+        For the SDE case (Euler-Maruyama):
+        .. math::
+        X_{t+\Delta t} = X_t
+            + \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\Delta t
+            + \sqrt{2\,\epsilon(t)\,\Delta t}\;\xi,\quad
+            \xi \sim \mathcal N(0,I).
+
+        :param batch: Mini-batch dict with at least ``'x'`` (current state).
+        :type batch: Dict[str, torch.Tensor]
+        :param model: Callable that maps/updates ``batch`` and provides fields like
+                    ``'b'`` (and optionally ``'eta'``).
+        :param dt: Time step :math:`\Delta t > 0`.
+        :type dt: float
+        :param step_type: ``"ode"`` (deterministic) or ``"sde"`` (stochastic).
+        :type step_type: str
+        :param clip_val: Start at :math:`t=\text{clip_val}` and end at
+                        :math:`t=1-\text{clip_val}` (exclusive of the end).
+        :type clip_val: float
+        :param epsilon: Noise schedule :math:`\epsilon(t)`.
+        :type epsilon: Callable
+
+        :returns: A dict with:
+                - ``'x_traj'``: stacked trajectory of shape
+                    ``(num_steps+1, batch, ...)`` including the initial state.
+                - ``'t_grid'``: times used (shape ``(num_steps,)``).
+                - ``'x'``: final state (same as ``x_traj[-1]``).
+        :rtype: Dict[str, torch.Tensor]
+        """
+        if dt <= 0:
+            raise ValueError("dt must be positive.")
+        
+        B = int(torch.max(batch['batch']) +1)
+
+        # Build time grid on the same device/dtype as x for consistency.
+        x_t = batch["x"]
+        t_grid = torch.arange(
+            clip_val,
+            1 - clip_val,
+            dt,
+            device=x_t.device,
+            dtype=torch.float32,
+        )
+
+        # Choose the stepping function.
+        is_ode = (step_type.lower() == "ode")
+
+        # Store trajectory (include initial state before any step).
+        x_traj = [x_t.clone()]
+
+        # Integrate forward in time.
+        for t_val in t_grid:
+            # Broadcast t to batch length
+            t = t_val.repeat(B)
+
+            # Run the model to compute drift for the current batch/state.
+            batch = model(batch)
+
+            # Drift term is required.
+            b = batch["b"]
+
+            # Eta is optional; if missing, default to b.
+            eta = batch.get("eta", b)
+
+            # Step according to the selected scheme.
+            if is_ode:
+                x_t = self.step_ode(x_t, b, dt)
+            else:
+                x_t = self.step_sde(x_t, b, eta, t, dt, epsilon)
+
+            # Update batch and record the new state.
+            batch["x"] = x_t
+            x_traj.append(x_t.clone())
+
+        # Stack into a single tensor: (num_steps+1, batch, ...)
+        x_traj = torch.stack(x_traj, dim=0)
+
+        return {
+            "x_traj": x_traj,
+            "t_grid": t_grid,
+            "x": x_traj[-1], # final state
+        }
 
 class LinearInterpolant(Interpolant):
     r"""
