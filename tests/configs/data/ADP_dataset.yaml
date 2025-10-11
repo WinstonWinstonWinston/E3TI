@@ -3,7 +3,7 @@ dataset:
     # filename for the dataset itself
     data_dir: ${paths.data_dir}
     data_proc_fname: AA
-    data_proc_ext: .pkl.gz
+    data_proc_ext: .pkl.zst
     data_raw_fname: alanine-dipeptide-250ns-nowater
     data_raw_ext: .xtc
     split: null
@@ -37,9 +37,9 @@ dataset:
 
 loader:
     _target_: e3ti.data.loader.E3TIDatamodule
-    num_workers: 16
-    prefetch_factor: 8
+    num_workers: 8
+    prefetch_factor: 2
     batch_size:
-        train: 128
-        valid: 128
-        test: 128
+        train: 64
+        valid: 64
+        test: 64

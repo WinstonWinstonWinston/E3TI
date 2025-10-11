@@ -3,26 +3,59 @@ from torch_cluster import radius_graph
 from torch_scatter import scatter,scatter_max
 from e3nn import o3
 import e3nn.nn as enn
-from e3nn.o3 import Linear
+from e3nn.o3 import Linear,FullyConnectedTensorProduct
 from e3nn.nn import BatchNorm
 from e3nn.math import soft_unit_step, soft_one_hot_linspace
 from e3ti.utils import channels_arr_to_string, parse_activation
 
 class SE3Transformer(torch.nn.Module):
-    """ 
-    SE3Transformer implemenation from https://docs.e3nn.org/en/stable/guide/transformer.html
-    Follows details of https://arxiv.org/pdf/2006.10503
-    """
+    r"""
+    Transformer for 3D graphs that uses spherical-tensor edge embeddings and
+    irrep-typed node features, following
+    `e3nn guide <https://docs.e3nn.org/en/stable/guide/transformer.html>`_ and
+    `Fuchs et al., 2020 <https://arxiv.org/pdf/2006.10503>`_.
 
+    :param _max_radius:
+        Cutoff radius for building edges; pairs with :math:`r_{ij} >` this are skipped.
+    :type _max_radius: float
+    :param _number_of_basis:
+        Radial basis size.
+    :type _number_of_basis: int
+    :param _hidden_size:
+        Internal hidden channel size for projections/MLPs.
+    :type _hidden_size: int
+    :param act:
+        Activation function identifier used in internal MLPs.
+    :type act: str
+    :param max_neighbors:
+        Maximum neighbors per node (cap during graph construction).
+    :type max_neighbors: int
+    :param _irreps_sh:
+        Spherical-harmonics irreps (sets :math:`\ell_{\max}`) for angular embeddings.
+    :type _irreps_sh: e3nn.o3.Irreps
+    :param _irreps_input:
+        Irreps of input node features.
+    :type _irreps_input: e3nn.o3.Irreps
+    :param _irreps_output:
+        Target irreps of output node features. Corresponds to values irreps.
+    :type _irreps_output: e3nn.o3.Irreps
+    :param _irreps_key:
+        Irreps used for attention keys.
+    :type _irreps_key: e3nn.o3.Irreps
+    :param _irreps_query:
+        Irreps used for attention queries.
+    :type _irreps_query: e3nn.o3.Irreps
+    :param _edge_basis:
+        Radial basis constructor for :math:`\mathbf{b}(r)` (e.g., ``soft_one_hot_linspace`` from e3nn).
+    :type _edge_basis: Callable
+    """
     def __init__(self, _max_radius, _number_of_basis, _hidden_size, act, max_neighbors,
                  _irreps_sh,             # max rank to embed edges via spherical tensors
                  _irreps_input,          # e3nn irrep corresponding to input feature
                  _irreps_output,         # desired irrep corresponding to output feature
                  _irreps_key,            # desired irrep corresponding to keys
-                 _irreps_values,         # desired irrep corresponding to values
                  _irreps_query,          # desired irrep corresponding to query
                  _edge_basis,            # basis functions to use on edge emebeddings https://docs.e3nn.org/en/latest/api/math/math.html#e3nn.math.soft_one_hot_linspace
-                 _periodic = False,      # boolean flag on whether or not to apply pbc, default no
                  ): 
 
         super().__init__()
@@ -34,11 +67,9 @@ class SE3Transformer(torch.nn.Module):
         self.irreps_input = _irreps_input
         self.irreps_output = _irreps_output
         self.irreps_key = _irreps_key
-        self.irreps_values = _irreps_values
         self.irreps_query = _irreps_query
         self.edge_basis = _edge_basis
         self.act = act
-        self.periodic = _periodic
 
         self.tp_k = o3.FullyConnectedTensorProduct(self.irreps_input, self.irreps_sh, self.irreps_key, shared_weights=False)
         self.fc_k = enn.FullyConnectedNet([self.number_of_basis, _hidden_size, self.tp_k.weight_numel], act=self.act)
@@ -53,7 +84,23 @@ class SE3Transformer(torch.nn.Module):
         # Hard coded to stop the sqrt from being zero.
         self.eps = 1e-12
 
-    def forward(self, f, pos, batch, cell_lengths=None):
+    def forward(self, f: torch.Tensor, pos: torch.Tensor, batch: torch.Tensor) -> torch.Tensor:
+        r"""
+        Run one SE3Transformer pass on a 3D graph.
+
+        :param f:
+            Node features, shape :math:`(N, C_\text{in})`.
+        :type f: torch.Tensor
+        :param pos:
+            Node coordinates, shape :math:`(N, 3)`.
+        :type pos: torch.Tensor
+        :param batch:
+            Graph id per node (PyG-style), shape :math:`(N,)`.
+        :type batch: torch.Tensor
+        :return:
+            Updated node features, shape :math:`(N, C_\text{out})`.
+        :rtype: torch.Tensor
+        """
         edge_src, edge_dst = radius_graph(x=pos, 
                                         r=self.max_radius, 
                                         batch=batch, 
@@ -165,7 +212,6 @@ class MultiSE3Transformer(torch.nn.Module):
 
         irreps_key = o3.Irreps(channels_arr_to_string(key_channels))
         irreps_query = o3.Irreps(channels_arr_to_string(query_channels))
-        irreps_values = o3.Irreps(channels_arr_to_string(hidden_channels)) # hidden channels = value channels
 
         irreps_sh = o3.Irreps.spherical_harmonics(edge_l_max)
         edge_basis = edge_basis
@@ -188,7 +234,6 @@ class MultiSE3Transformer(torch.nn.Module):
             irreps_hidden,       # e3nn irrep corresponding to input feature
             irreps_hidden,       # desired irrep corresponding to output feature
             irreps_key,          # desired irrep corresponding to keys
-            irreps_values,       # desired irrep corresponding to values
             irreps_query,        # desired irrep corresponding to query
             edge_basis,          # basis functions to use on edge emebeddings
             ))
@@ -200,13 +245,13 @@ class MultiSE3Transformer(torch.nn.Module):
                  irreps_hidden,       # e3nn irrep corresponding to input feature
                  irreps_hidden,       # desired irrep corresponding to output feature
                  irreps_key,          # desired irrep corresponding to keys
-                 irreps_values,       # desired irrep corresponding to values
                  irreps_query,        # desired irrep corresponding to query
                  edge_basis,          # basis functions to use on edge emebeddings
                 )
             )
        
         self.batch_norm  = BatchNorm(irreps_hidden) if bn else lambda x:x 
+
         self.readout_b = Linear(irreps_hidden, self.irreps_readout)
         self.readout_eta = Linear(irreps_hidden, self.irreps_readout)
 

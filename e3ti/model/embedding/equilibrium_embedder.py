@@ -6,7 +6,42 @@ from torch_geometric.data import Data
 from e3ti.utils import parse_activation
 
 class EquilibriumEmbedder(nn.Module):
-    def __init__(self, use_ff, interp_time, force_field,atom_type):
+    def __init__(self, use_ff, interp_time, force_field, atom_type) -> None:
+        r"""
+        Node feature embedder that concatenates (i) atom-type embeddings,
+        (ii) an interpolant time embedding, and (optionally) (iii) force-field
+        scalars passed through an MLP.
+
+        .. math::
+
+            \mathbf{f}_i
+            \;=\;
+            \big[\, \mathbf{e}^{(\text{atom})}_{a_i}
+            \;\Vert\;
+            \mathbf{e}^{(t)}_{t}
+            \;\Vert\;
+            \mathbf{e}^{(\text{ff})}_{i} \,\big]
+
+        where :math:`\mathbf{e}^{(\text{ff})}_{i}` is present only if
+        :code:`use_ff=True`. The resulting representation is treated as
+        :math:`D` copies of the scalar even irrep :math:`0e`, i.e.
+        :math:`\text{Irreps}(D\times 0e)`.
+
+        :param use_ff:
+            Whether to include force-field features (charge, mass, sigma, epsilon).
+        :type use_ff: bool
+        :param interp_time:
+            Configuration for :class:`TimeEmbed` used on the graph-level interpolant time.
+        :type interp_time: Any
+        :param force_field:
+            Namespace/struct with fields ``in_dim``, ``hidden_dims``, ``out_dim``,
+            ``activation``, ``use_input_bn``, ``affine``, ``track_running_stats``.
+            Required only if :code:`use_ff=True`.
+        :type force_field: Any
+        :param atom_type:
+            Namespace/struct with fields ``num_types`` and ``embedding_dim``.
+        :type atom_type: Any
+        """
         super().__init__()
         self.use_ff = use_ff
 
@@ -29,6 +64,35 @@ class EquilibriumEmbedder(nn.Module):
         )
 
     def forward(self, batch : Data) -> Data:
+        r"""
+        Build node features :math:`\mathbf{f}\in\mathbb{R}^{(B\!\cdot\!N)\times D}`
+        by concatenating available embeddings and store them into the batch.
+
+        Expected fields in :code:`batch`:
+          - ``atom_type``: Long tensor of shape :math:`(B\!\cdot\!N,)`.
+          - ``t_interpolant``: Float tensor of shape :math:`(B,)`.
+          - If :code:`use_ff=True`: ``charge``, ``mass``, ``sigma``, ``epsilon``
+            each of shape :math:`(B\!\cdot\!N,)`.
+
+        .. math::
+
+            \mathbf{e}^{(\text{ff})}_i
+            = \text{MLP}\!\left(
+              \begin{bmatrix} q_i & m_i & \sigma_i & \epsilon_i \end{bmatrix}
+            \right),
+            \qquad
+            D = D_{\text{atom}} + D_t \;[+\, D_{\text{ff}}]
+
+        :param batch:
+            PyG data object with per-node atom types and per-graph time.
+        :type batch: torch_geometric.data.Data
+
+        :return:
+            The same :code:`batch` with two new keys:
+            ``'f'`` (node features, shape :math:`(B\!\cdot\!N, D)`)
+            and ``'f_irrep'`` (:class:`e3nn.o3.Irreps`, equal to :math:`D\times 0e`).
+        :rtype: torch_geometric.data.Data
+        """
         # Expect: atom_type (B,N), interp_time (B,), and if use_ff: charge/mass/sigma/epsilon (B,N)
         atom_ty  = batch["atom_type"].long()
         t        = batch["t_interpolant"].float()
@@ -58,6 +122,35 @@ class EquilibriumEmbedder(nn.Module):
 
 
 class MLPWithBN(nn.Module):
+    r"""
+    A simple MLP with BatchNorm after the input (optional) and after every hidden
+    linear layer.
+
+    Layer pattern:
+    :math:`\text{[BN]} \rightarrow (\text{Lin} \rightarrow \text{BN} \rightarrow \phi)^{L} \rightarrow \text{Lin}_{\text{out}}`.
+
+    :param in_dim:
+        Input feature dimension.
+    :type in_dim: int
+    :param hidden_dims:
+        Hidden layer sizes in order.
+    :type hidden_dims: tuple[int, ...]
+    :param out_dim:
+        Output feature dimension.
+    :type out_dim: int
+    :param activation:
+        Nonlinearity name parsed by :func:`e3ti.utils.parse_activation`.
+    :type activation: str
+    :param use_input_bn:
+        If ``True``, apply BatchNorm to the inputs.
+    :type use_input_bn: bool
+    :param affine:
+        Whether BN layers learn affine scale/shift and linears drop bias when ``True``.
+    :type affine: bool
+    :param track_running_stats:
+        Whether BN tracks running mean/var.
+    :type track_running_stats: bool
+    """
     def __init__(self, in_dim, hidden_dims=(128, 128), out_dim=1, activation='relu',
                  use_input_bn=True, affine=True, track_running_stats=True):
         super().__init__()
@@ -77,5 +170,15 @@ class MLPWithBN(nn.Module):
         layers += [nn.Linear(last, out_dim)]
         self.net = nn.Sequential(*layers)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        r"""
+        Apply the MLP to inputs.
+
+        :param x:
+            Input tensor of shape :math:`(B, \text{in\_dim})`.
+        :type x: torch.Tensor
+        :return:
+            Output tensor of shape :math:`(B, \text{out\_dim})`.
+        :rtype: torch.Tensor
+        """
         return self.net(x)

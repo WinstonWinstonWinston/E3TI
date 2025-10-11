@@ -1,5 +1,6 @@
 import pickle
-import gzip
+# import gzip
+import zstandard as zstd
 import torch
 from torch_geometric.data import Data
 from omegaconf import DictConfig
@@ -104,14 +105,21 @@ class ADPDataset(E3TIDataset):
             for frame_start,frame_end,t in zip(frames_start,frames_end, delta_idx):
                 processed_frame = self._preprocess_one_nonequilibrium(frame_start, frame_end, t,node_feats)
                 results.append(processed_frame)
+
+        return results
         
         self.mean = mean
         self.std = std
 
-        # Save processed data to a compressed pickle file
-        print(f"Saving {len(results)} processed frame(s) to {processed_path}")
-        with gzip.open(processed_path, 'wb') as f:
-            pickle.dump(results, f, protocol=pickle.HIGHEST_PROTOCOL) # type: ignore
+        # # Save processed data to a compressed pickle file
+        # print(f"Saving {len(results)} processed frame(s) to {processed_path}")
+        # with gzip.open(processed_path, 'wb') as f:
+        #     pickle.dump(results, f, protocol=pickle.HIGHEST_PROTOCOL) # type: ignore
+
+        # print(f"Saving {len(results)} processed frame(s) to {processed_path}")
+        # with open(processed_path, "wb") as raw:
+        #     with zstd.ZstdCompressor(level=12).stream_writer(raw) as f:
+        #         pickle.dump(results, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     def summarize_cfg(self) -> None:
         """

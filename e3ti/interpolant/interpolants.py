@@ -3,76 +3,83 @@ from .abstract import LinearInterpolant
 from .corrector import Corrector, IdentityCorrector
 
 class TemporallyLinearInterpolant(LinearInterpolant):
+    r"""
+    Temporally Linear interpolant :math:`I(t, x_0, x_1) = (1 - t) x_0 + t x_1` between tensors
+    :math:`x_0` and :math:`x_1` from two distributions :math:`p_0` and :math:`p_1` at time :math:`t`.
+
+    .. math::
+
+    I(t, x_0, x_1) = (1 - t)\,x_0 + t\,x_1
+
+    :param t: Time parameter.
+    :type t: Tensor
+    :param x_0: Tensor from distribution :math:`p_0`.
+    :type x_0: Tensor
+    :param x_1: Tensor from distribution :math:`p_1`.
+    :type x_1: Tensor
     """
-    Linear interpolant I(t, x_0, x_1) = (1 - t) * x_0 + t * x_1 between points x_0 and x_1 from two distributions p_0
-    and p_1 at times t.
-    """
+
     def __init__(self, velocity_weight: float = 1.0, denoiser_weight: float = 1.0) -> None:
-        """
-        Construct linear interpolant.
-        """
         super().__init__(velocity_weight, denoiser_weight)
 
     def alpha(self, t: torch.Tensor) -> torch.Tensor:
-        """
-        Alpha function alpha(t) in the linear interpolant.
+        r"""
+        Alpha function :math:`\alpha(t) = (1-t)`.
 
         :param t:
-            Times in [0,1].
+            Times in :math:`t \in [0,1]`.
         :type t: torch.Tensor
 
         :return:
-            Values of the alpha function at the given times.
+            Values of the alpha function :math:`\alpha(t) = 1-t` at the given times :math:`t`.
         :rtype: torch.Tensor
         """
         return 1.0 - t
 
     def alpha_dot(self, t: torch.Tensor) -> torch.Tensor:
-        """
-        Time derivative of the alpha function in the linear interpolant.
+        r"""
+        Derivative of the alpha function :math:`\dot{\alpha}(t) = -1`.
 
         :param t:
-            Times in [0,1].
+            Times in :math:`t \in [0,1]`.
         :type t: torch.Tensor
 
         :return:
-            Derivatives of the alpha function at the given times.
+            Derivatives of the alpha function :math:`\dot{\alpha}(t)` = -1 at the given times :math:`t`.
         :rtype: torch.Tensor
         """
         return -torch.ones_like(t)
 
     def beta(self, t: torch.Tensor) -> torch.Tensor:
-        """
-        Beta function beta(t) in the linear interpolant.
+        r"""
+        Beta function :math:`\beta(t) = t`.
 
         :param t:
-            Times in [0,1].
+            Times in :math:`t \in [0,1]`.
         :type t: torch.Tensor
 
         :return:
-            Values of the beta function at the given times.
+            Values of the beta function :math:`\beta(t) = t` at the given times :math:`t`.
         :rtype: torch.Tensor
         """
         return t.clone()
 
     def beta_dot(self, t: torch.Tensor) -> torch.Tensor:
-        """
-        Time derivative of the beta function in the linear interpolant.
+        r"""
+        Derivative of the beta function :math:`\dot{\beta}(t) = 1`.
 
         :param t:
-            Times in [0,1].
+            Times in :math:`t \in [0,1]`.
         :type t: torch.Tensor
 
         :return:
-            Derivatives of the beta function at the given times.
+            Derivatives of the beta function :math:`\dot{\beta}(t) = 1` at the given times :math:`t`.
         :rtype: torch.Tensor
         """
         return torch.ones_like(t)
 
     def get_corrector(self) -> Corrector:
         """
-        Get the corrector implied by the interpolant.
-
         :return:
             Identity corrector that does nothing.
         :rtype: Corrector
@@ -80,29 +87,29 @@ class TemporallyLinearInterpolant(LinearInterpolant):
         return IdentityCorrector()
     
     def gamma(self, t: torch.Tensor) -> torch.Tensor:
-        """
-        Gamma function gamma(t) in the linear interpolant.
+        r"""
+        Gamma function :math:`\gamma(t) = \sqrt{2t(1-t)}`.
 
         :param t:
-            Times in [0,1].
+            Times in :math:`t \in [0,1]`.
         :type t: torch.Tensor
 
         :return:
-            Values of the gamma function at the given times.
+            Values of the gamma function :math:`\gamma(t)` at the given times.
         :rtype: torch.Tensor
         """
         return torch.sqrt(2*t*(1-t))
     
     def gamma_dot(self, t: torch.Tensor) -> torch.Tensor:
-        """
-        Time derivative of the gamma function in the stochastic interpolant.
+        r"""
+        Time derivative of the gamma function :math:`\dot{\gamma}(t) = (1-2t)\gamma(t)`.
 
         :param t:
-            Times in [0,1].
+            Times in :math:`t \in [0,1]`.
         :type t: torch.Tensor
 
         :return:
-            Derivatives of the gamma function at the given times.
+            Derivatives of the gamma function :math:`\dot{\gamma}(t) = (1-2t)/\gamma(t)` at the given times.
         :rtype: torch.Tensor
         """
         return (1-2*t)/self.gamma(t)
@@ -119,7 +126,6 @@ class TrigonometricInterpolant(LinearInterpolant):
     Trigonometric interpolant I(t, x_0, x_1) = cos(pi / 2 * t) * x_0 + sin(pi / 2 * t) * x_1 between points x_0 and x_1
     from two distributions p_0 and p_1 at times t.
     """
-
     def __init__(self, velocity_weight: float = 1.0, denoiser_weight: float = 1.0) -> None:
         """
         Construct trigonometric interpolant.

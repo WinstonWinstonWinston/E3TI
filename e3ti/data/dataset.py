@@ -3,6 +3,7 @@ from torch import Tensor
 import os
 import pickle
 import gzip
+import zstandard as zstd
 import torch
 from torch.utils.data import Dataset
 from omegaconf import DictConfig
@@ -54,12 +55,16 @@ class E3TIDataset(Dataset):
         else:
             # if not use preprocess from child 
             print(f"INFO:: No processed data found at {processed_path}... preprocessing data")
-            self._preprocess(raw_path, processed_path)
+            self.processed_data = self._preprocess(raw_path, processed_path)
 
-        # processed data exists now, save it.
-        print(f"INFO:: Loading processed data from {processed_path}")
-        with gzip.open(processed_path, 'rb') as f:
-            self.processed_data = pickle.load(f) # type: ignore
+        # # processed data exists now, save it.
+        # print(f"INFO:: Loading processed data from {processed_path}")
+        # # with gzip.open(processed_path, 'rb') as f:
+        # #     self.processed_data = pickle.load(f) # type: ignore
+
+        # with open(processed_path, "rb") as raw:
+        #     with zstd.ZstdDecompressor().stream_reader(raw) as f:
+        #         self.processed_data = pickle.load(f)
 
 # --------------------------------- preprocessing methods ---------------------------------
 #       The methods in this section are built to preprocess a trajectory dataset.

@@ -59,11 +59,7 @@ class PeriodicBoundaryConditionsCorrector(Corrector):
     :raises ValueError:
         If the minimum value is greater than the maximum value.
     """
-
     def __init__(self, min_value: float, max_value: float) -> None:
-        """
-        Construct corrector function.
-        """
         super().__init__()
         self._min_value = min_value
         self._max_value = max_value

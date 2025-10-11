@@ -83,6 +83,7 @@ class E3TIModule(LightningModule):
         batch['z'] = z
         batch = self.forward(batch)
         loss = self.interpolant.loss(*utils.batch2loss(batch))
+        self.log_dict({f"train/{k}": v for k, v in loss.items()},on_step=True, prog_bar=True, logger=True)
         return loss
 
     def validation_step(self, batch) -> dict[str, torch.Tensor]:
@@ -109,6 +110,7 @@ class E3TIModule(LightningModule):
         batch = self.forward(batch)
         # TODO: Fix interpolant to have stratified flag
         loss = self.interpolant.loss(*utils.batch2loss(batch,stratified=self.cfg.validation.stratified))
+        self.log_dict({f"val/{k}": v for k, v in loss.items()},on_step=True, prog_bar=True, logger=True)
         return loss
     
     def predict_step(self, batch) -> None:
@@ -124,7 +126,8 @@ class E3TIModule(LightningModule):
             A torch batch of geometric data objects which come from a data loader. 
         :type batch: torch_geometric.data.Data
         """
-        raise NotImplementedError
+        # raise NotImplementedError
+        pass
         # self.experiment.run(batch)
 
     def summarize_cfg(self):
