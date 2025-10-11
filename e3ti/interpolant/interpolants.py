@@ -10,18 +10,11 @@ class TemporallyLinearInterpolant(LinearInterpolant):
     .. math::
 
     I(t, x_0, x_1) = (1 - t)\,x_0 + t\,x_1
-
-    :param t: Time parameter.
-    :type t: Tensor
-    :param x_0: Tensor from distribution :math:`p_0`.
-    :type x_0: Tensor
-    :param x_1: Tensor from distribution :math:`p_1`.
-    :type x_1: Tensor
     """
 
-    def __init__(self, velocity_weight: float = 1.0, denoiser_weight: float = 1.0) -> None:
+    def __init__(self, velocity_weight: float = 1.0, denoiser_weight: float = 1.0, gamma_weight = 1.0) -> None:
         super().__init__(velocity_weight, denoiser_weight)
-
+        self.gamma_weight = gamma_weight
     def alpha(self, t: torch.Tensor) -> torch.Tensor:
         r"""
         Alpha function :math:`\alpha(t) = (1-t)`.
@@ -98,7 +91,7 @@ class TemporallyLinearInterpolant(LinearInterpolant):
             Values of the gamma function :math:`\gamma(t)` at the given times.
         :rtype: torch.Tensor
         """
-        return torch.sqrt(2*t*(1-t))
+        return self.gamma_weight*torch.sqrt(2*t*(1-t))
     
     def gamma_dot(self, t: torch.Tensor) -> torch.Tensor:
         r"""
@@ -112,7 +105,7 @@ class TemporallyLinearInterpolant(LinearInterpolant):
             Derivatives of the gamma function :math:`\dot{\gamma}(t) = (1-2t)/\gamma(t)` at the given times.
         :rtype: torch.Tensor
         """
-        return (1-2*t)/self.gamma(t)
+        return self.gamma_weight*(1 / (2 * torch.sqrt(2 * t * (1 - t)))) * (2 * (1 - t) - 2 * t)
     
     def summarize_cfg(self):
         """
