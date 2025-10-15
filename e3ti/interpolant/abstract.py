@@ -223,7 +223,7 @@ class Interpolant(ABC):
 
             X_{t+\Delta t} = x_t + \Big[b(X_t,t) - \tfrac{\epsilon(t)\,\eta (X_t,t)}{\gamma(t)}\Big]\Delta t + \sqrt{2\,\epsilon(t)\,\Delta t}\;\xi,\quad
         
-        where :math: `\xi \sim \mathcal N(0,I)`.
+        where :math:`\xi \sim \mathcal N(0,I)`.
 
         :param x_t: State at time :math:`t`.
         :type x_t: torch.Tensor
