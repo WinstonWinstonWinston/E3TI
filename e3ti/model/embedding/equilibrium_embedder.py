@@ -116,7 +116,8 @@ class EquilibriumEmbedder(nn.Module):
         f = torch.cat(parts, dim=-1)  # (B, N, D_atom + D_t [+ D_ff])
 
         batch['f'] = f
-        batch['f_irrep'] =Irreps(str(len(f[-1]))+"x0e") 
+        batch['f_irrep'] =Irreps(str(len(f[-1]))+"x0e")
+        # TODO: must add this to the "keys" list. 
 
         return batch
 

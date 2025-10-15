@@ -5,14 +5,16 @@ trainer:
   overfit_batches: 0
   min_epochs: 1 # prevents early stopping
   max_epochs: 200
-  accelerator: cpu
-  log_every_n_steps: 1
+  accelerator: gpu
+  log_every_n_steps: 10
   deterministic: False
   strategy: ddp
   val_check_interval: 1.0
   check_val_every_n_epoch: 1
   accumulate_grad_batches: 1
   gradient_clip_val: 0.5
+  gradient_clip_algorithm: norm
+  precision: 32-true
 
 checkpointer:
   dirpath: ${paths.ckpt_dir}

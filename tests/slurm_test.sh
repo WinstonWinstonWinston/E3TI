@@ -3,7 +3,7 @@
 #SBATCH -o slurm-%j.out
 #SBATCH -e slurm-%j.err
 #SBATCH -p interactive-gpu
-#SBATCH -t 08:00:00
+#SBATCH -t 04:00:00
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1           # ONE task (one Python process)
 #SBATCH --cpus-per-task=8             # CPUs for DataLoader workers
