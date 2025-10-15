@@ -47,3 +47,5 @@ MANIFEST
 .DS_Store
 .ipynb_checkpoints
 _build/
+
+slurm-*
